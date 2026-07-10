@@ -1,0 +1,66 @@
+{
+  "source": {
+    "quotes": {
+      "url": "https://raw.githubusercontent.com/QF-Bench/QuantitativeFinance-Bench/024921eb507fcc0c4ffe3e0a96802724be1ae84a/tasks/binance-btc-participation-tca/environment/data/quotes.csv",
+      "path": "/home/runner/work/CityFlow/CityFlow/tmp_microfield_runner/raw/qf_quotes.csv",
+      "bytes": 7844210,
+      "sha256": "2ad54b04f4c586f258f3aca6ebfca4bf99b597698f244f645f87f8722c82527d",
+      "cached": false
+    },
+    "trades": {
+      "url": "https://raw.githubusercontent.com/QF-Bench/QuantitativeFinance-Bench/024921eb507fcc0c4ffe3e0a96802724be1ae84a/tasks/binance-btc-participation-tca/environment/data/trades.csv",
+      "path": "/home/runner/work/CityFlow/CityFlow/tmp_microfield_runner/raw/qf_trades.csv",
+      "bytes": 300110,
+      "sha256": "cc5d413681c1e75586cd014c24e314475a1a1d080c9833e8365ec1e5c4b19314",
+      "cached": false
+    }
+  },
+  "seed": 20260710,
+  "null_replicates": 499,
+  "rows": {
+    "quotes": 82103,
+    "trades": 4444,
+    "milliseconds": 299701
+  },
+  "events": {
+    "raw_after_refractory": 452,
+    "boundary_valid": 435,
+    "by_kind": {
+      "bbo_imbalance": 221,
+      "top_depth": 169,
+      "trade_flow": 45
+    }
+  },
+  "matched_state_dimensions": [
+    "spread quartile",
+    "top depth quintile",
+    "absolute BBO imbalance quintile",
+    "trailing-100ms trade activity quintile"
+  ],
+  "refractory_ms": 100,
+  "boundary_exclusion_ms": 5000,
+  "control_event_exclusion_radius_ms": 100,
+  "threshold_abs_robust_z": 6.0,
+  "response_gate": "BH-FDR q<0.05 plus bootstrap 95% CI excludes zero",
+  "significant_return_horizons_ms": [
+    1,
+    5,
+    10,
+    25,
+    50,
+    100,
+    250,
+    500,
+    1000,
+    2000
+  ],
+  "significant_displacement_horizons_ms": [
+    1,
+    5,
+    10,
+    25,
+    50,
+    100,
+    250
+  ]
+}
