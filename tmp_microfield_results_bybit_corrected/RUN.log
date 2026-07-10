@@ -1,0 +1,179 @@
+{
+  "date": "2024-03-05",
+  "window_utc": [
+    "2024-03-05T00:00:00Z",
+    "2024-03-05T01:00:00Z"
+  ],
+  "resolutions": {
+    "50": {
+      "bins": 72000,
+      "initial_impulses": {
+        "BTCUSDT": 167,
+        "ETHUSDT": 131,
+        "SOLUSDT": 100
+      },
+      "exclusive_impulses": {
+        "BTCUSDT": 156,
+        "ETHUSDT": 118,
+        "SOLUSDT": 96
+      },
+      "n_tests": 84,
+      "n_p2_return": 17,
+      "n_p2_flow": 0,
+      "gain_spectral_radius": 0.05312193292422099,
+      "gain_matrix": [
+        [
+          0.0,
+          0.1777610116549708,
+          0.0
+        ],
+        [
+          0.015874908290253998,
+          0.0,
+          0.0
+        ],
+        [
+          0.0006147795679663214,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "100": {
+      "bins": 36000,
+      "initial_impulses": {
+        "BTCUSDT": 104,
+        "ETHUSDT": 85,
+        "SOLUSDT": 64
+      },
+      "exclusive_impulses": {
+        "BTCUSDT": 97,
+        "ETHUSDT": 78,
+        "SOLUSDT": 62
+      },
+      "n_tests": 84,
+      "n_p2_return": 18,
+      "n_p2_flow": 0,
+      "gain_spectral_radius": 0.0,
+      "gain_matrix": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.00658293275793198,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "250": {
+      "bins": 14400,
+      "initial_impulses": {
+        "BTCUSDT": 0,
+        "ETHUSDT": 41,
+        "SOLUSDT": 28
+      },
+      "exclusive_impulses": {
+        "BTCUSDT": 0,
+        "ETHUSDT": 40,
+        "SOLUSDT": 27
+      },
+      "n_tests": 56,
+      "n_p2_return": 0,
+      "n_p2_flow": 0,
+      "gain_spectral_radius": 0.0,
+      "gain_matrix": [
+        [
+          0.0,
+          0.1974307169987208,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0013781985956899815,
+          0.0
+        ]
+      ]
+    },
+    "500": {
+      "bins": 7200,
+      "initial_impulses": {
+        "BTCUSDT": 0,
+        "ETHUSDT": 0,
+        "SOLUSDT": 0
+      },
+      "exclusive_impulses": {
+        "BTCUSDT": 0,
+        "ETHUSDT": 0,
+        "SOLUSDT": 0
+      },
+      "n_tests": 0,
+      "n_p2_return": 0,
+      "n_p2_flow": 0,
+      "gain_spectral_radius": 0.0,
+      "gain_matrix": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "1000": {
+      "bins": 3600,
+      "initial_impulses": {
+        "BTCUSDT": 1,
+        "ETHUSDT": 0,
+        "SOLUSDT": 1
+      },
+      "exclusive_impulses": {
+        "BTCUSDT": 1,
+        "ETHUSDT": 0,
+        "SOLUSDT": 1
+      },
+      "n_tests": 0,
+      "n_p2_return": 0,
+      "n_p2_flow": 0,
+      "gain_spectral_radius": 0.0,
+      "gain_matrix": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    }
+  }
+}

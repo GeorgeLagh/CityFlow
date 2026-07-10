@@ -1,0 +1,30 @@
+{
+  "seed": 20260710,
+  "date": "2024-03-05",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT"
+  ],
+  "resolutions_ms": [
+    50,
+    100,
+    250,
+    500,
+    1000
+  ],
+  "lags_ms": [
+    50,
+    100,
+    250,
+    500,
+    1000,
+    2000,
+    5000
+  ],
+  "null_replicates": 199,
+  "exclusive_impulse_radius_ms": 100,
+  "common_factor_control": "target return and signed flow residualized contemporaneously against the other two assets",
+  "multiple_testing": "BH-FDR across all source-target-lag return and flow tests within each resolution",
+  "P2_gate": "q<0.05 and event-bootstrap 95% CI excludes zero"
+}

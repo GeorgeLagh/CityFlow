@@ -1,0 +1,32 @@
+[
+  {
+    "url": "https://public.bybit.com/trading/BTCUSDT/BTCUSDT2024-03-05.csv.gz",
+    "path": "/home/runner/work/CityFlow/CityFlow/tmp_microfield_runner/raw/BTCUSDT2024-03-05.csv.gz",
+    "bytes": 193823544,
+    "sha256": "8e5d5d0cb0298ece0a678daedcef564676d600073020d9cbfd3e010a9e4dae27",
+    "cached": false,
+    "symbol": "BTCUSDT",
+    "date": "2024-03-05",
+    "parsed_first_hour_rows": 89955
+  },
+  {
+    "url": "https://public.bybit.com/trading/ETHUSDT/ETHUSDT2024-03-05.csv.gz",
+    "path": "/home/runner/work/CityFlow/CityFlow/tmp_microfield_runner/raw/ETHUSDT2024-03-05.csv.gz",
+    "bytes": 101247410,
+    "sha256": "d2af58d729ca1b43165276d0b1d630b6596c167a97d3381e76b75d3c2ca7d690",
+    "cached": false,
+    "symbol": "ETHUSDT",
+    "date": "2024-03-05",
+    "parsed_first_hour_rows": 42330
+  },
+  {
+    "url": "https://public.bybit.com/trading/SOLUSDT/SOLUSDT2024-03-05.csv.gz",
+    "path": "/home/runner/work/CityFlow/CityFlow/tmp_microfield_runner/raw/SOLUSDT2024-03-05.csv.gz",
+    "bytes": 149109441,
+    "sha256": "e97e6b7d7b9380fef5bf8f788fec326fcfc6ef20c997cfeedf8576a2dfc1ffcc",
+    "cached": false,
+    "symbol": "SOLUSDT",
+    "date": "2024-03-05",
+    "parsed_first_hour_rows": 61184
+  }
+]
