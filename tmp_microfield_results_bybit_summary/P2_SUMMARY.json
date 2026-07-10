@@ -1,0 +1,86 @@
+{
+  "rows_total": 112,
+  "p2_rows_total": 35,
+  "p2_return_rows": 35,
+  "p2_flow_rows": 0,
+  "p2_by_resolution": {
+    "50": {
+      "return": 17,
+      "flow": 0,
+      "tested_rows": 42
+    },
+    "100": {
+      "return": 18,
+      "flow": 0,
+      "tested_rows": 42
+    },
+    "250": {
+      "return": 0,
+      "flow": 0,
+      "tested_rows": 28
+    }
+  },
+  "persistent_directed_edges": [
+    {
+      "source": "BTCUSDT",
+      "target": "ETHUSDT",
+      "active_resolutions_ms": [
+        50,
+        100
+      ],
+      "n_active_resolutions": 2,
+      "total_p2_return_lags": 12,
+      "any_p2_flow": false
+    },
+    {
+      "source": "BTCUSDT",
+      "target": "SOLUSDT",
+      "active_resolutions_ms": [],
+      "n_active_resolutions": 0,
+      "total_p2_return_lags": 0,
+      "any_p2_flow": false
+    },
+    {
+      "source": "ETHUSDT",
+      "target": "BTCUSDT",
+      "active_resolutions_ms": [
+        50,
+        100
+      ],
+      "n_active_resolutions": 2,
+      "total_p2_return_lags": 10,
+      "any_p2_flow": false
+    },
+    {
+      "source": "ETHUSDT",
+      "target": "SOLUSDT",
+      "active_resolutions_ms": [
+        50
+      ],
+      "n_active_resolutions": 1,
+      "total_p2_return_lags": 2,
+      "any_p2_flow": false
+    },
+    {
+      "source": "SOLUSDT",
+      "target": "BTCUSDT",
+      "active_resolutions_ms": [],
+      "n_active_resolutions": 0,
+      "total_p2_return_lags": 0,
+      "any_p2_flow": false
+    },
+    {
+      "source": "SOLUSDT",
+      "target": "ETHUSDT",
+      "active_resolutions_ms": [
+        50,
+        100
+      ],
+      "n_active_resolutions": 2,
+      "total_p2_return_lags": 11,
+      "any_p2_flow": false
+    }
+  ],
+  "strict_p2_definition": "exclusive source P1; target contemporaneously residualized against other assets; circular-shift null N=199; BH-FDR q<0.05; event-bootstrap 95% CI excludes zero",
+  "field_interpretation": "P2 rows are horizon-specific directed responses. Repeated lags from one source-target pair are one propagation channel with a response curve, not separate causal edges."
+}
