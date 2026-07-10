@@ -1,0 +1,3282 @@
+[
+  {
+    "n_nodes": 1722,
+    "n_edges": 601,
+    "n_cascades": 367,
+    "top_cascades": [
+      {
+        "size": 10,
+        "duration_ms": 9100,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 8,
+        "start_ms": 1709598626100,
+        "end_ms": 1709598635200
+      },
+      {
+        "size": 9,
+        "duration_ms": 7800,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 8,
+        "start_ms": 1709598860250,
+        "end_ms": 1709598868050
+      },
+      {
+        "size": 8,
+        "duration_ms": 4950,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 7,
+        "start_ms": 1709597413600,
+        "end_ms": 1709597418550
+      },
+      {
+        "size": 8,
+        "duration_ms": 5600,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 6,
+        "start_ms": 1709599272700,
+        "end_ms": 1709599278300
+      },
+      {
+        "size": 7,
+        "duration_ms": 6100,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 6,
+        "start_ms": 1709599332600,
+        "end_ms": 1709599338700
+      },
+      {
+        "size": 7,
+        "duration_ms": 5450,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 5,
+        "start_ms": 1709598811650,
+        "end_ms": 1709598817100
+      },
+      {
+        "size": 6,
+        "duration_ms": 5400,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 5,
+        "start_ms": 1709596890300,
+        "end_ms": 1709596895700
+      },
+      {
+        "size": 6,
+        "duration_ms": 3250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 5,
+        "start_ms": 1709598229750,
+        "end_ms": 1709598233000
+      },
+      {
+        "size": 6,
+        "duration_ms": 4250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 4,
+        "start_ms": 1709596812500,
+        "end_ms": 1709596816750
+      },
+      {
+        "size": 6,
+        "duration_ms": 3100,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 4,
+        "start_ms": 1709597195250,
+        "end_ms": 1709597198350
+      },
+      {
+        "size": 6,
+        "duration_ms": 3150,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 4,
+        "start_ms": 1709598681950,
+        "end_ms": 1709598685100
+      },
+      {
+        "size": 6,
+        "duration_ms": 1650,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709598442800,
+        "end_ms": 1709598444450
+      },
+      {
+        "size": 5,
+        "duration_ms": 1700,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 4,
+        "start_ms": 1709597471550,
+        "end_ms": 1709597473250
+      },
+      {
+        "size": 5,
+        "duration_ms": 3400,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 4,
+        "start_ms": 1709598214000,
+        "end_ms": 1709598217400
+      },
+      {
+        "size": 5,
+        "duration_ms": 5200,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 4,
+        "start_ms": 1709598600850,
+        "end_ms": 1709598606050
+      },
+      {
+        "size": 5,
+        "duration_ms": 3000,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 4,
+        "start_ms": 1709599429700,
+        "end_ms": 1709599432700
+      },
+      {
+        "size": 5,
+        "duration_ms": 1150,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 4,
+        "start_ms": 1709599520750,
+        "end_ms": 1709599521900
+      },
+      {
+        "size": 5,
+        "duration_ms": 2300,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709596867300,
+        "end_ms": 1709596869600
+      },
+      {
+        "size": 5,
+        "duration_ms": 3250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709596995650,
+        "end_ms": 1709596998900
+      },
+      {
+        "size": 5,
+        "duration_ms": 3250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709598053800,
+        "end_ms": 1709598057050
+      },
+      {
+        "size": 5,
+        "duration_ms": 2900,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709598250450,
+        "end_ms": 1709598253350
+      },
+      {
+        "size": 5,
+        "duration_ms": 4350,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709598767950,
+        "end_ms": 1709598772300
+      },
+      {
+        "size": 5,
+        "duration_ms": 3450,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709599387250,
+        "end_ms": 1709599390700
+      },
+      {
+        "size": 5,
+        "duration_ms": 3450,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598477650,
+        "end_ms": 1709598481100
+      },
+      {
+        "size": 5,
+        "duration_ms": 1550,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709599424200,
+        "end_ms": 1709599425750
+      },
+      {
+        "size": 5,
+        "duration_ms": 2750,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709599815700,
+        "end_ms": 1709599818450
+      },
+      {
+        "size": 4,
+        "duration_ms": 1950,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709596801250,
+        "end_ms": 1709596803200
+      },
+      {
+        "size": 4,
+        "duration_ms": 1950,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709596821500,
+        "end_ms": 1709596823450
+      },
+      {
+        "size": 4,
+        "duration_ms": 1800,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709596852600,
+        "end_ms": 1709596854400
+      },
+      {
+        "size": 4,
+        "duration_ms": 1700,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597016900,
+        "end_ms": 1709597018600
+      },
+      {
+        "size": 4,
+        "duration_ms": 4700,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597157400,
+        "end_ms": 1709597162100
+      },
+      {
+        "size": 4,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597256150,
+        "end_ms": 1709597257650
+      },
+      {
+        "size": 4,
+        "duration_ms": 3050,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597263050,
+        "end_ms": 1709597266100
+      },
+      {
+        "size": 4,
+        "duration_ms": 2550,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597431250,
+        "end_ms": 1709597433800
+      },
+      {
+        "size": 4,
+        "duration_ms": 2300,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709597652950,
+        "end_ms": 1709597655250
+      },
+      {
+        "size": 4,
+        "duration_ms": 1800,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709598147450,
+        "end_ms": 1709598149250
+      },
+      {
+        "size": 4,
+        "duration_ms": 2700,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709598220750,
+        "end_ms": 1709598223450
+      },
+      {
+        "size": 4,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709598423900,
+        "end_ms": 1709598425400
+      },
+      {
+        "size": 4,
+        "duration_ms": 3050,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709598555500,
+        "end_ms": 1709598558550
+      },
+      {
+        "size": 4,
+        "duration_ms": 2700,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709598644350,
+        "end_ms": 1709598647050
+      },
+      {
+        "size": 4,
+        "duration_ms": 4600,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709598876250,
+        "end_ms": 1709598880850
+      },
+      {
+        "size": 4,
+        "duration_ms": 4000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709599214400,
+        "end_ms": 1709599218400
+      },
+      {
+        "size": 4,
+        "duration_ms": 3650,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709599284350,
+        "end_ms": 1709599288000
+      },
+      {
+        "size": 4,
+        "duration_ms": 1650,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709599379800,
+        "end_ms": 1709599381450
+      },
+      {
+        "size": 4,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709599525800,
+        "end_ms": 1709599527300
+      },
+      {
+        "size": 4,
+        "duration_ms": 1700,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709599732250,
+        "end_ms": 1709599733950
+      },
+      {
+        "size": 4,
+        "duration_ms": 3400,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709599752400,
+        "end_ms": 1709599755800
+      },
+      {
+        "size": 4,
+        "duration_ms": 1550,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709599792900,
+        "end_ms": 1709599794450
+      },
+      {
+        "size": 4,
+        "duration_ms": 3200,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709599801700,
+        "end_ms": 1709599804900
+      },
+      {
+        "size": 4,
+        "duration_ms": 2400,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709596808600,
+        "end_ms": 1709596811000
+      }
+    ],
+    "date": "2024-03-05",
+    "resolution_ms": 50,
+    "significant_edges": [
+      [
+        "BTCUSDT",
+        "ETHUSDT"
+      ],
+      [
+        "BTCUSDT",
+        "SOLUSDT"
+      ],
+      [
+        "ETHUSDT",
+        "BTCUSDT"
+      ],
+      [
+        "ETHUSDT",
+        "SOLUSDT"
+      ],
+      [
+        "SOLUSDT",
+        "BTCUSDT"
+      ],
+      [
+        "SOLUSDT",
+        "ETHUSDT"
+      ]
+    ]
+  },
+  {
+    "n_nodes": 1324,
+    "n_edges": 386,
+    "n_cascades": 255,
+    "top_cascades": [
+      {
+        "size": 7,
+        "duration_ms": 5600,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 6,
+        "start_ms": 1709599272700,
+        "end_ms": 1709599278300
+      },
+      {
+        "size": 7,
+        "duration_ms": 4900,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 5,
+        "start_ms": 1709597413600,
+        "end_ms": 1709597418500
+      },
+      {
+        "size": 7,
+        "duration_ms": 5200,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 5,
+        "start_ms": 1709598681900,
+        "end_ms": 1709598687100
+      },
+      {
+        "size": 6,
+        "duration_ms": 3300,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 5,
+        "start_ms": 1709598229700,
+        "end_ms": 1709598233000
+      },
+      {
+        "size": 6,
+        "duration_ms": 5500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 4,
+        "start_ms": 1709598811600,
+        "end_ms": 1709598817100
+      },
+      {
+        "size": 5,
+        "duration_ms": 1700,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 4,
+        "start_ms": 1709597471500,
+        "end_ms": 1709597473200
+      },
+      {
+        "size": 5,
+        "duration_ms": 3400,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 4,
+        "start_ms": 1709598214000,
+        "end_ms": 1709598217400
+      },
+      {
+        "size": 5,
+        "duration_ms": 3000,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 4,
+        "start_ms": 1709599429700,
+        "end_ms": 1709599432700
+      },
+      {
+        "size": 5,
+        "duration_ms": 1200,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 4,
+        "start_ms": 1709599520700,
+        "end_ms": 1709599521900
+      },
+      {
+        "size": 5,
+        "duration_ms": 3300,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709596995600,
+        "end_ms": 1709596998900
+      },
+      {
+        "size": 5,
+        "duration_ms": 3200,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709598053800,
+        "end_ms": 1709598057000
+      },
+      {
+        "size": 4,
+        "duration_ms": 2700,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709596801300,
+        "end_ms": 1709596804000
+      },
+      {
+        "size": 4,
+        "duration_ms": 1700,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597016900,
+        "end_ms": 1709597018600
+      },
+      {
+        "size": 4,
+        "duration_ms": 3100,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597195200,
+        "end_ms": 1709597198300
+      },
+      {
+        "size": 4,
+        "duration_ms": 3100,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597263000,
+        "end_ms": 1709597266100
+      },
+      {
+        "size": 4,
+        "duration_ms": 2300,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597461200,
+        "end_ms": 1709597463500
+      },
+      {
+        "size": 4,
+        "duration_ms": 3900,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709597842900,
+        "end_ms": 1709597846800
+      },
+      {
+        "size": 4,
+        "duration_ms": 2700,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709598220700,
+        "end_ms": 1709598223400
+      },
+      {
+        "size": 4,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709598442800,
+        "end_ms": 1709598443800
+      },
+      {
+        "size": 4,
+        "duration_ms": 5200,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709598600800,
+        "end_ms": 1709598606000
+      },
+      {
+        "size": 4,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709598627500,
+        "end_ms": 1709598629000
+      },
+      {
+        "size": 4,
+        "duration_ms": 1200,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709599792900,
+        "end_ms": 1709599794100
+      },
+      {
+        "size": 4,
+        "duration_ms": 2400,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709596808600,
+        "end_ms": 1709596811000
+      },
+      {
+        "size": 4,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709597256100,
+        "end_ms": 1709597257600
+      },
+      {
+        "size": 4,
+        "duration_ms": 1400,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709598389900,
+        "end_ms": 1709598391300
+      },
+      {
+        "size": 4,
+        "duration_ms": 2100,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709598906400,
+        "end_ms": 1709598908500
+      },
+      {
+        "size": 4,
+        "duration_ms": 1300,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709599424200,
+        "end_ms": 1709599425500
+      },
+      {
+        "size": 4,
+        "duration_ms": 2700,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709599815700,
+        "end_ms": 1709599818400
+      },
+      {
+        "size": 4,
+        "duration_ms": 1700,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709600112300,
+        "end_ms": 1709600114000
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709596814700,
+        "end_ms": 1709596816700
+      },
+      {
+        "size": 3,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709596829300,
+        "end_ms": 1709596830300
+      },
+      {
+        "size": 3,
+        "duration_ms": 400,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709596841500,
+        "end_ms": 1709596841900
+      },
+      {
+        "size": 3,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709596852900,
+        "end_ms": 1709596854400
+      },
+      {
+        "size": 3,
+        "duration_ms": 2200,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709596862600,
+        "end_ms": 1709596864800
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709596867300,
+        "end_ms": 1709596869300
+      },
+      {
+        "size": 3,
+        "duration_ms": 2300,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709596890300,
+        "end_ms": 1709596892600
+      },
+      {
+        "size": 3,
+        "duration_ms": 500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709596908200,
+        "end_ms": 1709596908700
+      },
+      {
+        "size": 3,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709596923600,
+        "end_ms": 1709596924600
+      },
+      {
+        "size": 3,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709597010100,
+        "end_ms": 1709597010100
+      },
+      {
+        "size": 3,
+        "duration_ms": 1900,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709597105300,
+        "end_ms": 1709597107200
+      },
+      {
+        "size": 3,
+        "duration_ms": 1900,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709597191900,
+        "end_ms": 1709597193800
+      },
+      {
+        "size": 3,
+        "duration_ms": 1100,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709597432700,
+        "end_ms": 1709597433800
+      },
+      {
+        "size": 3,
+        "duration_ms": 1400,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709597776100,
+        "end_ms": 1709597777500
+      },
+      {
+        "size": 3,
+        "duration_ms": 100,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709597864600,
+        "end_ms": 1709597864700
+      },
+      {
+        "size": 3,
+        "duration_ms": 2700,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709597952900,
+        "end_ms": 1709597955600
+      },
+      {
+        "size": 3,
+        "duration_ms": 1100,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598039500,
+        "end_ms": 1709598040600
+      },
+      {
+        "size": 3,
+        "duration_ms": 1600,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598193000,
+        "end_ms": 1709598194600
+      },
+      {
+        "size": 3,
+        "duration_ms": 2300,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598234600,
+        "end_ms": 1709598236900
+      },
+      {
+        "size": 3,
+        "duration_ms": 1600,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598239100,
+        "end_ms": 1709598240700
+      },
+      {
+        "size": 3,
+        "duration_ms": 2100,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709598244000,
+        "end_ms": 1709598246100
+      }
+    ],
+    "date": "2024-03-05",
+    "resolution_ms": 100,
+    "significant_edges": [
+      [
+        "BTCUSDT",
+        "ETHUSDT"
+      ],
+      [
+        "BTCUSDT",
+        "SOLUSDT"
+      ],
+      [
+        "ETHUSDT",
+        "BTCUSDT"
+      ],
+      [
+        "ETHUSDT",
+        "SOLUSDT"
+      ],
+      [
+        "SOLUSDT",
+        "BTCUSDT"
+      ],
+      [
+        "SOLUSDT",
+        "ETHUSDT"
+      ]
+    ]
+  },
+  {
+    "n_nodes": 902,
+    "n_edges": 213,
+    "n_cascades": 142,
+    "top_cascades": [
+      {
+        "size": 6,
+        "duration_ms": 6500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 5,
+        "start_ms": 1709597191750,
+        "end_ms": 1709597198250
+      },
+      {
+        "size": 6,
+        "duration_ms": 5250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 4,
+        "start_ms": 1709598681750,
+        "end_ms": 1709598687000
+      },
+      {
+        "size": 5,
+        "duration_ms": 3250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 4,
+        "start_ms": 1709596995500,
+        "end_ms": 1709596998750
+      },
+      {
+        "size": 5,
+        "duration_ms": 3250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 4,
+        "start_ms": 1709598229750,
+        "end_ms": 1709598233000
+      },
+      {
+        "size": 5,
+        "duration_ms": 3000,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 4,
+        "start_ms": 1709599429500,
+        "end_ms": 1709599432500
+      },
+      {
+        "size": 5,
+        "duration_ms": 3750,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597471500,
+        "end_ms": 1709597475250
+      },
+      {
+        "size": 5,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709599520750,
+        "end_ms": 1709599521750
+      },
+      {
+        "size": 4,
+        "duration_ms": 3000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597263000,
+        "end_ms": 1709597266000
+      },
+      {
+        "size": 4,
+        "duration_ms": 3250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597413500,
+        "end_ms": 1709597416750
+      },
+      {
+        "size": 4,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709598244000,
+        "end_ms": 1709598246000
+      },
+      {
+        "size": 4,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709598442750,
+        "end_ms": 1709598443750
+      },
+      {
+        "size": 4,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709598627500,
+        "end_ms": 1709598629000
+      },
+      {
+        "size": 4,
+        "duration_ms": 2250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709598890000,
+        "end_ms": 1709598892250
+      },
+      {
+        "size": 4,
+        "duration_ms": 3000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709599807500,
+        "end_ms": 1709599810500
+      },
+      {
+        "size": 4,
+        "duration_ms": 2500,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709596808500,
+        "end_ms": 1709596811000
+      },
+      {
+        "size": 4,
+        "duration_ms": 1250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598053750,
+        "end_ms": 1709598055000
+      },
+      {
+        "size": 3,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709596801250,
+        "end_ms": 1709596802750
+      },
+      {
+        "size": 3,
+        "duration_ms": 250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709596841500,
+        "end_ms": 1709596841750
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709596867250,
+        "end_ms": 1709596869250
+      },
+      {
+        "size": 3,
+        "duration_ms": 250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709596908250,
+        "end_ms": 1709596908500
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709597042250,
+        "end_ms": 1709597044250
+      },
+      {
+        "size": 3,
+        "duration_ms": 1750,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709597105250,
+        "end_ms": 1709597107000
+      },
+      {
+        "size": 3,
+        "duration_ms": 2500,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709597398000,
+        "end_ms": 1709597400500
+      },
+      {
+        "size": 3,
+        "duration_ms": 1250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709597461000,
+        "end_ms": 1709597462250
+      },
+      {
+        "size": 3,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709597776000,
+        "end_ms": 1709597777500
+      },
+      {
+        "size": 3,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709597864500,
+        "end_ms": 1709597864500
+      },
+      {
+        "size": 3,
+        "duration_ms": 3750,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709597951750,
+        "end_ms": 1709597955500
+      },
+      {
+        "size": 3,
+        "duration_ms": 1250,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598193000,
+        "end_ms": 1709598194250
+      },
+      {
+        "size": 3,
+        "duration_ms": 3250,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598214000,
+        "end_ms": 1709598217250
+      },
+      {
+        "size": 3,
+        "duration_ms": 2500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598292000,
+        "end_ms": 1709598294500
+      },
+      {
+        "size": 3,
+        "duration_ms": 1750,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598432750,
+        "end_ms": 1709598434500
+      },
+      {
+        "size": 3,
+        "duration_ms": 1750,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598534750,
+        "end_ms": 1709598536500
+      },
+      {
+        "size": 3,
+        "duration_ms": 750,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709598867250,
+        "end_ms": 1709598868000
+      },
+      {
+        "size": 3,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709599222750,
+        "end_ms": 1709599224250
+      },
+      {
+        "size": 3,
+        "duration_ms": 750,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709599231500,
+        "end_ms": 1709599232250
+      },
+      {
+        "size": 3,
+        "duration_ms": 1750,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709599272500,
+        "end_ms": 1709599274250
+      },
+      {
+        "size": 3,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709599424000,
+        "end_ms": 1709599424000
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709599632000,
+        "end_ms": 1709599634000
+      },
+      {
+        "size": 3,
+        "duration_ms": 3750,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709599755250,
+        "end_ms": 1709599759000
+      },
+      {
+        "size": 3,
+        "duration_ms": 750,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 1,
+        "start_ms": 1709598532500,
+        "end_ms": 1709598533250
+      },
+      {
+        "size": 3,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598668500,
+        "end_ms": 1709598670000
+      },
+      {
+        "size": 3,
+        "duration_ms": 1500,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598769000,
+        "end_ms": 1709598770500
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709599164750,
+        "end_ms": 1709599166750
+      },
+      {
+        "size": 3,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709599269000,
+        "end_ms": 1709599270000
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709600148250,
+        "end_ms": 1709600150250
+      },
+      {
+        "size": 3,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709600159500,
+        "end_ms": 1709600160500
+      },
+      {
+        "size": 2,
+        "duration_ms": 1750,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596812500,
+        "end_ms": 1709596814250
+      },
+      {
+        "size": 2,
+        "duration_ms": 500,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596825000,
+        "end_ms": 1709596825500
+      },
+      {
+        "size": 2,
+        "duration_ms": 500,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596853750,
+        "end_ms": 1709596854250
+      },
+      {
+        "size": 2,
+        "duration_ms": 1750,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596858250,
+        "end_ms": 1709596860000
+      }
+    ],
+    "date": "2024-03-05",
+    "resolution_ms": 250,
+    "significant_edges": [
+      [
+        "BTCUSDT",
+        "ETHUSDT"
+      ],
+      [
+        "BTCUSDT",
+        "SOLUSDT"
+      ],
+      [
+        "ETHUSDT",
+        "BTCUSDT"
+      ],
+      [
+        "ETHUSDT",
+        "SOLUSDT"
+      ],
+      [
+        "SOLUSDT",
+        "BTCUSDT"
+      ],
+      [
+        "SOLUSDT",
+        "ETHUSDT"
+      ]
+    ]
+  },
+  {
+    "n_nodes": 642,
+    "n_edges": 128,
+    "n_cascades": 87,
+    "top_cascades": [
+      {
+        "size": 6,
+        "duration_ms": 6500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 5,
+        "start_ms": 1709597191500,
+        "end_ms": 1709597198000
+      },
+      {
+        "size": 6,
+        "duration_ms": 4000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 5,
+        "start_ms": 1709599272500,
+        "end_ms": 1709599276500
+      },
+      {
+        "size": 5,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 4,
+        "start_ms": 1709598442500,
+        "end_ms": 1709598444500
+      },
+      {
+        "size": 5,
+        "duration_ms": 3500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597471500,
+        "end_ms": 1709597475000
+      },
+      {
+        "size": 4,
+        "duration_ms": 3000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 3,
+        "start_ms": 1709597263000,
+        "end_ms": 1709597266000
+      },
+      {
+        "size": 4,
+        "duration_ms": 2500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709598229500,
+        "end_ms": 1709598232000
+      },
+      {
+        "size": 4,
+        "duration_ms": 4000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709598532500,
+        "end_ms": 1709598536500
+      },
+      {
+        "size": 4,
+        "duration_ms": 3000,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709599429500,
+        "end_ms": 1709599432500
+      },
+      {
+        "size": 4,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598053500,
+        "end_ms": 1709598055000
+      },
+      {
+        "size": 4,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709599520500,
+        "end_ms": 1709599521500
+      },
+      {
+        "size": 3,
+        "duration_ms": 2500,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709596808500,
+        "end_ms": 1709596811000
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709596867000,
+        "end_ms": 1709596869000
+      },
+      {
+        "size": 3,
+        "duration_ms": 2500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709596906000,
+        "end_ms": 1709596908500
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709597105000,
+        "end_ms": 1709597107000
+      },
+      {
+        "size": 3,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709597776000,
+        "end_ms": 1709597777500
+      },
+      {
+        "size": 3,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709597864500,
+        "end_ms": 1709597864500
+      },
+      {
+        "size": 3,
+        "duration_ms": 2500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598292000,
+        "end_ms": 1709598294500
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598432500,
+        "end_ms": 1709598434500
+      },
+      {
+        "size": 3,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598627500,
+        "end_ms": 1709598629000
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598681500,
+        "end_ms": 1709598683500
+      },
+      {
+        "size": 3,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709599424000,
+        "end_ms": 1709599424000
+      },
+      {
+        "size": 3,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598668500,
+        "end_ms": 1709598670000
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709599164500,
+        "end_ms": 1709599166500
+      },
+      {
+        "size": 3,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709599269000,
+        "end_ms": 1709599270000
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709599727500,
+        "end_ms": 1709599729500
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596802500,
+        "end_ms": 1709596802500
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596841500,
+        "end_ms": 1709596841500
+      },
+      {
+        "size": 2,
+        "duration_ms": 500,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596853500,
+        "end_ms": 1709596854000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596858000,
+        "end_ms": 1709596860000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596894500,
+        "end_ms": 1709596895500
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596903000,
+        "end_ms": 1709596903000
+      },
+      {
+        "size": 2,
+        "duration_ms": 500,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596955500,
+        "end_ms": 1709596956000
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597010000,
+        "end_ms": 1709597010000
+      },
+      {
+        "size": 2,
+        "duration_ms": 500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597080500,
+        "end_ms": 1709597081000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597156500,
+        "end_ms": 1709597158000
+      },
+      {
+        "size": 2,
+        "duration_ms": 500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597183500,
+        "end_ms": 1709597184000
+      },
+      {
+        "size": 2,
+        "duration_ms": 500,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597209500,
+        "end_ms": 1709597210000
+      },
+      {
+        "size": 2,
+        "duration_ms": 500,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597228000,
+        "end_ms": 1709597228500
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597341500,
+        "end_ms": 1709597343500
+      },
+      {
+        "size": 2,
+        "duration_ms": 500,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597392000,
+        "end_ms": 1709597392500
+      },
+      {
+        "size": 2,
+        "duration_ms": 500,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597408000,
+        "end_ms": 1709597408500
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597432500,
+        "end_ms": 1709597433500
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597461000,
+        "end_ms": 1709597462000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1500,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597532500,
+        "end_ms": 1709597534000
+      },
+      {
+        "size": 2,
+        "duration_ms": 500,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597654500,
+        "end_ms": 1709597655000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597858000,
+        "end_ms": 1709597859000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597873500,
+        "end_ms": 1709597875500
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598069000,
+        "end_ms": 1709598069000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598072500,
+        "end_ms": 1709598074500
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598142500,
+        "end_ms": 1709598142500
+      }
+    ],
+    "date": "2024-03-05",
+    "resolution_ms": 500,
+    "significant_edges": [
+      [
+        "BTCUSDT",
+        "ETHUSDT"
+      ],
+      [
+        "BTCUSDT",
+        "SOLUSDT"
+      ],
+      [
+        "ETHUSDT",
+        "BTCUSDT"
+      ],
+      [
+        "ETHUSDT",
+        "SOLUSDT"
+      ],
+      [
+        "SOLUSDT",
+        "BTCUSDT"
+      ],
+      [
+        "SOLUSDT",
+        "ETHUSDT"
+      ]
+    ]
+  },
+  {
+    "n_nodes": 456,
+    "n_edges": 82,
+    "n_cascades": 55,
+    "top_cascades": [
+      {
+        "size": 6,
+        "duration_ms": 7000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 5,
+        "start_ms": 1709597191000,
+        "end_ms": 1709597198000
+      },
+      {
+        "size": 6,
+        "duration_ms": 5000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709598532000,
+        "end_ms": 1709598537000
+      },
+      {
+        "size": 5,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 4,
+        "start_ms": 1709598442000,
+        "end_ms": 1709598444000
+      },
+      {
+        "size": 4,
+        "duration_ms": 3000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709598229000,
+        "end_ms": 1709598232000
+      },
+      {
+        "size": 4,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 3,
+        "start_ms": 1709599274000,
+        "end_ms": 1709599276000
+      },
+      {
+        "size": 3,
+        "duration_ms": 3000,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709596808000,
+        "end_ms": 1709596811000
+      },
+      {
+        "size": 3,
+        "duration_ms": 4000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709597156000,
+        "end_ms": 1709597160000
+      },
+      {
+        "size": 3,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709597265000,
+        "end_ms": 1709597266000
+      },
+      {
+        "size": 3,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 2,
+        "start_ms": 1709597864000,
+        "end_ms": 1709597864000
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598432000,
+        "end_ms": 1709598434000
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598681000,
+        "end_ms": 1709598683000
+      },
+      {
+        "size": 3,
+        "duration_ms": 1000,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709598768000,
+        "end_ms": 1709598769000
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 2,
+        "start_ms": 1709599452000,
+        "end_ms": 1709599454000
+      },
+      {
+        "size": 3,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 1,
+        "start_ms": 1709597471000,
+        "end_ms": 1709597472000
+      },
+      {
+        "size": 3,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 3,
+        "max_depth": 1,
+        "start_ms": 1709598601000,
+        "end_ms": 1709598601000
+      },
+      {
+        "size": 3,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709599520000,
+        "end_ms": 1709599521000
+      },
+      {
+        "size": 3,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709599727000,
+        "end_ms": 1709599729000
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596802000,
+        "end_ms": 1709596802000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596858000,
+        "end_ms": 1709596860000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596867000,
+        "end_ms": 1709596869000
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596903000,
+        "end_ms": 1709596903000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709596906000,
+        "end_ms": 1709596908000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597080000,
+        "end_ms": 1709597081000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597183000,
+        "end_ms": 1709597184000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597209000,
+        "end_ms": 1709597210000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597224000,
+        "end_ms": 1709597226000
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597228000,
+        "end_ms": 1709597228000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597341000,
+        "end_ms": 1709597343000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597461000,
+        "end_ms": 1709597462000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709597858000,
+        "end_ms": 1709597859000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598072000,
+        "end_ms": 1709598074000
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598193000,
+        "end_ms": 1709598193000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598214000,
+        "end_ms": 1709598215000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598252000,
+        "end_ms": 1709598253000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598399000,
+        "end_ms": 1709598400000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598439000,
+        "end_ms": 1709598441000
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598489000,
+        "end_ms": 1709598489000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598602000,
+        "end_ms": 1709598604000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598670000,
+        "end_ms": 1709598672000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598677000,
+        "end_ms": 1709598679000
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598713000,
+        "end_ms": 1709598713000
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598842000,
+        "end_ms": 1709598842000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598863000,
+        "end_ms": 1709598864000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598867000,
+        "end_ms": 1709598868000
+      },
+      {
+        "size": 2,
+        "duration_ms": 2000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709598890000,
+        "end_ms": 1709598892000
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709599269000,
+        "end_ms": 1709599269000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709599312000,
+        "end_ms": 1709599313000
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709599424000,
+        "end_ms": 1709599424000
+      },
+      {
+        "size": 2,
+        "duration_ms": 0,
+        "assets": [
+          "ETHUSDT",
+          "SOLUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709599440000,
+        "end_ms": 1709599440000
+      },
+      {
+        "size": 2,
+        "duration_ms": 1000,
+        "assets": [
+          "BTCUSDT",
+          "ETHUSDT"
+        ],
+        "n_assets": 2,
+        "max_depth": 1,
+        "start_ms": 1709599444000,
+        "end_ms": 1709599445000
+      }
+    ],
+    "date": "2024-03-05",
+    "resolution_ms": 1000,
+    "significant_edges": [
+      [
+        "BTCUSDT",
+        "ETHUSDT"
+      ],
+      [
+        "BTCUSDT",
+        "SOLUSDT"
+      ],
+      [
+        "ETHUSDT",
+        "BTCUSDT"
+      ],
+      [
+        "ETHUSDT",
+        "SOLUSDT"
+      ],
+      [
+        "SOLUSDT",
+        "BTCUSDT"
+      ],
+      [
+        "SOLUSDT",
+        "ETHUSDT"
+      ]
+    ]
+  }
+]

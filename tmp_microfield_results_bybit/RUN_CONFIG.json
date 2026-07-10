@@ -1,0 +1,22 @@
+{
+  "date": "2024-03-05",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT"
+  ],
+  "window_utc": [
+    "2024-03-05T00:00:00Z",
+    "2024-03-05T01:00:00Z"
+  ],
+  "resolutions_ms": [
+    50,
+    100,
+    250,
+    500,
+    1000
+  ],
+  "circular_shift_null_replicates": 99,
+  "fdr": "Benjamini-Hochberg across response-return and response-flow tests per resolution/date output",
+  "p2_rule": "directed edge only if q<0.05 at lag<=1000ms; temporal ordering alone is insufficient"
+}
