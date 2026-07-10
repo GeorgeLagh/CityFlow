@@ -1,0 +1,116 @@
+{
+  "source": {
+    "quotes": {
+      "url": "https://raw.githubusercontent.com/QF-Bench/QuantitativeFinance-Bench/024921eb507fcc0c4ffe3e0a96802724be1ae84a/tasks/binance-btc-participation-tca/environment/data/quotes.csv",
+      "path": "/home/runner/work/CityFlow/CityFlow/tmp_microfield_runner/raw/qf_quotes.csv",
+      "bytes": 7844210,
+      "sha256": "2ad54b04f4c586f258f3aca6ebfca4bf99b597698f244f645f87f8722c82527d",
+      "cached": false
+    },
+    "trades": {
+      "url": "https://raw.githubusercontent.com/QF-Bench/QuantitativeFinance-Bench/024921eb507fcc0c4ffe3e0a96802724be1ae84a/tasks/binance-btc-participation-tca/environment/data/trades.csv",
+      "path": "/home/runner/work/CityFlow/CityFlow/tmp_microfield_runner/raw/qf_trades.csv",
+      "bytes": 300110,
+      "sha256": "cc5d413681c1e75586cd014c24e314475a1a1d080c9833e8365ec1e5c4b19314",
+      "cached": false
+    }
+  },
+  "quote_rows": 82103,
+  "trade_rows": 4444,
+  "start_ms": 1704067200038,
+  "end_ms": 1704067499738,
+  "duration_s": 299.7,
+  "median_quote_interarrival_ms": 0.0,
+  "p99_quote_interarrival_ms": 72.0,
+  "median_trade_interarrival_ms": 3.0,
+  "spread_summary": {
+    "median": 0.09999999999854481,
+    "p95": 0.10000000000582077,
+    "max": 9.200000000004366
+  },
+  "latency_ms": {
+    "median": 6.0,
+    "p95": 10.0,
+    "p99": 48.0,
+    "max": 1068.0
+  },
+  "n_liquidity_or_flow_shocks": 484,
+  "response_curve": [
+    {
+      "lag_ms": 1,
+      "signed_mid_response": 2.827213277902697e-06,
+      "imbalance_displacement": 0.05678974668259946,
+      "n": 484
+    },
+    {
+      "lag_ms": 5,
+      "signed_mid_response": 6.4251377209448264e-06,
+      "imbalance_displacement": 0.16921717482659693,
+      "n": 484
+    },
+    {
+      "lag_ms": 10,
+      "signed_mid_response": 7.948920189989908e-06,
+      "imbalance_displacement": 0.18737376645354709,
+      "n": 484
+    },
+    {
+      "lag_ms": 25,
+      "signed_mid_response": 9.297199082617639e-06,
+      "imbalance_displacement": 0.2133534228565824,
+      "n": 484
+    },
+    {
+      "lag_ms": 50,
+      "signed_mid_response": 1.0757461956198628e-05,
+      "imbalance_displacement": 0.24163407550626992,
+      "n": 484
+    },
+    {
+      "lag_ms": 100,
+      "signed_mid_response": 1.1177352229071393e-05,
+      "imbalance_displacement": 0.2891988651891056,
+      "n": 484
+    },
+    {
+      "lag_ms": 250,
+      "signed_mid_response": 1.4468185376708403e-05,
+      "imbalance_displacement": 0.3502508892918848,
+      "n": 483
+    },
+    {
+      "lag_ms": 500,
+      "signed_mid_response": 1.6746253355302926e-05,
+      "imbalance_displacement": 0.3839760965664525,
+      "n": 481
+    },
+    {
+      "lag_ms": 1000,
+      "signed_mid_response": 2.003265344216714e-05,
+      "imbalance_displacement": 0.4559512843135843,
+      "n": 479
+    },
+    {
+      "lag_ms": 2000,
+      "signed_mid_response": 2.431841052091856e-05,
+      "imbalance_displacement": 0.5764259455511889,
+      "n": 477
+    },
+    {
+      "lag_ms": 5000,
+      "signed_mid_response": 3.7015283256670646e-05,
+      "imbalance_displacement": 0.7355322339054081,
+      "n": 474
+    }
+  ],
+  "recovery_ms": {
+    "n": 377,
+    "median": 304.0,
+    "p90": 2866.4000000000046
+  },
+  "branching_proxy_1s": 0.2615236372664407,
+  "raw_correlations": {
+    "imbalance_next_100ms_return": 0.16853083115972176,
+    "signed_flow_next_100ms_return": 0.07902453866114045
+  }
+}
