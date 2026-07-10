@@ -18,7 +18,7 @@ permissions:
 jobs:
   research:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,21 +28,21 @@ jobs:
           python-version: '3.12'
       - name: Install numerical stack
         run: python -m pip install --upgrade pip numpy pandas
-      - name: Run matched-state BBO calibration v3
+      - name: Run full-L2 Deribit experiment
         shell: bash
         run: |
-          mkdir -p tmp_microfield_results_qf_null_v3
+          mkdir -p tmp_microfield_results_tardis_l2
           set +e
-          python tmp_microfield_runner/run_qf_matched_null_v3.py > tmp_microfield_results_qf_null_v3/RUN.log 2>&1
+          python tmp_microfield_runner/run_tardis_deribit_l2.py > tmp_microfield_results_tardis_l2/RUN.log 2>&1
           code=$?
-          echo "$code" > tmp_microfield_results_qf_null_v3/EXIT_CODE.txt
+          echo "$code" > tmp_microfield_results_tardis_l2/EXIT_CODE.txt
           set -e
       - name: Commit compact results
         if: always()
         run: |
           git config user.name 'microfield-research-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add tmp_microfield_results_qf_null_v3
+          git add tmp_microfield_results_tardis_l2
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'chore: record QF matched-state null v3 [skip ci]'
+          git commit -m 'chore: record Tardis Deribit L2 results [skip ci]'
           git push origin HEAD:tmp/microfield-research-20260710
