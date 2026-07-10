@@ -18,7 +18,7 @@ permissions:
 jobs:
   research:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,26 +28,26 @@ jobs:
           python-version: '3.12'
       - name: Install numerical stack
         run: python -m pip install --upgrade pip numpy pandas
-      - name: Run millisecond BBO research
+      - name: Run cross-asset native-tick research
         shell: bash
         run: |
-          mkdir -p tmp_microfield_results_qf
+          mkdir -p tmp_microfield_results_bybit
           set +e
-          python tmp_microfield_runner/run_qf_only.py > tmp_microfield_results_qf/RUN.log 2>&1
+          python tmp_microfield_runner/run_bybit_one_day.py > tmp_microfield_results_bybit/RUN.log 2>&1
           code=$?
-          echo "$code" > tmp_microfield_results_qf/EXIT_CODE.txt
+          echo "$code" > tmp_microfield_results_bybit/EXIT_CODE.txt
           set -e
       - name: Record environment
         if: always()
         run: |
-          python --version > tmp_microfield_results_qf/ENVIRONMENT.txt
-          python -m pip freeze >> tmp_microfield_results_qf/ENVIRONMENT.txt
+          python --version > tmp_microfield_results_bybit/ENVIRONMENT.txt
+          python -m pip freeze >> tmp_microfield_results_bybit/ENVIRONMENT.txt
       - name: Commit compact results
         if: always()
         run: |
           git config user.name 'microfield-research-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add tmp_microfield_results_qf
+          git add tmp_microfield_results_bybit
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'chore: record QF microfield results [skip ci]'
+          git commit -m 'chore: record Bybit microfield results [skip ci]'
           git push origin HEAD:tmp/microfield-research-20260710
