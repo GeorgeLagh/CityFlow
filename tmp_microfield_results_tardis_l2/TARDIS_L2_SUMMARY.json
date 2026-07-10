@@ -1,0 +1,67 @@
+{
+  "status": "ok",
+  "source": {
+    "l2": {
+      "url": "https://datasets.tardis.dev/v1/deribit/incremental_book_L2/2024/01/01/BTC-PERPETUAL.csv.gz",
+      "path": "/home/runner/work/CityFlow/CityFlow/tmp_microfield_runner/raw/tardis_deribit_BTC-PERPETUAL_L2_2024-01-01.csv.gz",
+      "bytes": 194902853,
+      "sha256": "4e23fe8a3ae1c0e09056f42d0b265bb3e365cdc95a3ec7fa62d9c4e9fa1af8d4",
+      "cached": false
+    },
+    "trades": {
+      "url": "https://datasets.tardis.dev/v1/deribit/trades/2024/01/01/BTC-PERPETUAL.csv.gz",
+      "path": "/home/runner/work/CityFlow/CityFlow/tmp_microfield_runner/raw/tardis_deribit_BTC-PERPETUAL_trades_2024-01-01.csv.gz",
+      "bytes": 654223,
+      "sha256": "aefa91fa2ac1001c917f8db40a31072745080baffb0ab742a279e5ef16567648",
+      "cached": false
+    }
+  },
+  "window": {
+    "first_timestamp_us": 1704067200009000,
+    "end_timestamp_us": 1704069000009000,
+    "duration_s": 1800.0,
+    "sampling_ms": 100
+  },
+  "raw": {
+    "l2_rows_processed": 668314,
+    "snapshot_rows": 4883,
+    "trade_rows_processed": 1577,
+    "crossed_book_observations": 12
+  },
+  "states": {
+    "rows": 17998,
+    "median_spread": 0.5,
+    "median_levels": {
+      "bid": 1766.0,
+      "ask": 689.0
+    },
+    "median_depth_50bp": {
+      "bid": 1036300.0,
+      "ask": 805595.0
+    },
+    "median_entropy_top20": {
+      "bid": 2.540876637676524,
+      "ask": 2.5594529541030946
+    }
+  },
+  "events": {
+    "raw_after_refractory": 823,
+    "boundary_valid": 813,
+    "by_kind": {
+      "imbalance_change": 476,
+      "signed_liquidity_delta": 265,
+      "removed_liquidity": 70,
+      "signed_trade_notional": 2
+    }
+  },
+  "null": {
+    "replicates": 199,
+    "matched_dimensions": [
+      "spread",
+      "50bp total depth",
+      "absolute 50bp imbalance",
+      "book-update intensity"
+    ],
+    "significant_horizons_ms": []
+  }
+}
