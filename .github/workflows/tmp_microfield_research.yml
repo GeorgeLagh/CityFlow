@@ -1,0 +1,46 @@
+name: Temporary microfield empirical research
+
+on:
+  push:
+    branches:
+      - tmp/microfield-research-20260710
+    paths:
+      - 'tmp_microfield_runner/**'
+      - '.github/workflows/tmp_microfield_research.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp/microfield-research-20260710
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      - name: Install numerical stack
+        run: python -m pip install --upgrade pip numpy pandas
+      - name: Run native-tick research
+        run: python tmp_microfield_runner/run_entry.py
+      - name: Record environment
+        if: always()
+        run: |
+          mkdir -p tmp_microfield_results
+          python --version > tmp_microfield_results/ENVIRONMENT.txt
+          python -m pip freeze >> tmp_microfield_results/ENVIRONMENT.txt
+      - name: Commit compact results
+        if: always()
+        run: |
+          git config user.name 'microfield-research-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add tmp_microfield_results
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'chore: record temporary microfield research results [skip ci]'
+          git push origin HEAD:tmp/microfield-research-20260710
