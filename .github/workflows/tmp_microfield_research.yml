@@ -18,7 +18,7 @@ permissions:
 jobs:
   research:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,22 +27,22 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install numerical stack
-        run: python -m pip install --upgrade pip pandas
-      - name: Summarize corrected P2 channels
+        run: python -m pip install --upgrade pip numpy pandas
+      - name: Run matched-state BBO null calibration
         shell: bash
         run: |
-          mkdir -p tmp_microfield_results_bybit_summary
+          mkdir -p tmp_microfield_results_qf_null
           set +e
-          python tmp_microfield_runner/summarize_corrected.py > tmp_microfield_results_bybit_summary/RUN.log 2>&1
+          python tmp_microfield_runner/run_qf_matched_null.py > tmp_microfield_results_qf_null/RUN.log 2>&1
           code=$?
-          echo "$code" > tmp_microfield_results_bybit_summary/EXIT_CODE.txt
+          echo "$code" > tmp_microfield_results_qf_null/EXIT_CODE.txt
           set -e
       - name: Commit compact results
         if: always()
         run: |
           git config user.name 'microfield-research-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add tmp_microfield_results_bybit_summary
+          git add tmp_microfield_results_qf_null
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'chore: record compact P2 summary [skip ci]'
+          git commit -m 'chore: record matched-state QF null results [skip ci]'
           git push origin HEAD:tmp/microfield-research-20260710
