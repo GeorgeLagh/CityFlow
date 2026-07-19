@@ -1,0 +1,64 @@
+name: MM v3.6.1 free official commodity data
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'tmp_free_official_data/**'
+      - '.github/workflows/mm_v361_free_official_data.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  official-small:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install downloader dependencies
+        run: python -m pip install --upgrade pip requests beautifulsoup4
+      - name: Validate downloader
+        run: python -m py_compile tmp_free_official_data/download_official_layers.py
+      - name: Download official control layers
+        run: python tmp_free_official_data/download_official_layers.py small --out free_official_data
+      - name: Upload official control layers
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mm-v361-free-official-small
+          path: free_official_data
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
+
+  nass-filtered:
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        category: [crops, animals_products, economics, environmental]
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install downloader dependencies
+        run: python -m pip install --upgrade pip requests beautifulsoup4
+      - name: Stream and filter NASS bulk dataset
+        run: python tmp_free_official_data/download_official_layers.py nass --category '${{ matrix.category }}' --out free_official_data
+      - name: Upload relevant NASS subset and manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mm-v361-nass-${{ matrix.category }}
+          path: free_official_data/nass
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
