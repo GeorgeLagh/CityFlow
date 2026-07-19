@@ -1,4 +1,4 @@
-name: MM v3.6 free commodity ticks 2024
+name: MM v3.6 free commodity ticks with volumes 2024
 
 on:
   pull_request:
@@ -12,7 +12,38 @@ permissions:
   contents: read
 
 jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify true tick-volume columns on one day
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir smoke && cd smoke
+          npx --yes dukascopy-node@1.49.0 -i lightcmdusd -from 2024-01-02 -to 2024-01-03 -t tick -f csv --volumes --volume-units units > run.log 2>&1
+          file=$(find . -type f -name '*.csv' | head -1)
+          test -n "$file"
+          header=$(head -1 "$file" | tr -d '\r')
+          echo "$header"
+          [[ "$header" == *"askVolume"* ]]
+          [[ "$header" == *"bidVolume"* ]]
+          rows=$(( $(wc -l < "$file") - 1 ))
+          test "$rows" -gt 0
+          printf '{"status":"passed","rows":%s,"header":"%s"}\n' "$rows" "$header" > SMOKE.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: free-commodity-volume-smoke
+          path: smoke
+          retention-days: 7
+          compression-level: 6
+
   download:
+    needs: smoke
     strategy:
       fail-fast: false
       max-parallel: 8
@@ -27,7 +58,7 @@ jobs:
           - soybeancmdusx
           - coffeecmdusx
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,14 +67,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Download full 2024 tick history
+      - name: Download full 2024 tick history with bid/ask volumes
         run: bash tmp_free_commodity_ticks/download_2024.sh '${{ matrix.instrument }}' 2024
-      - name: Upload compressed raw ticks and manifest
+      - name: Upload compressed raw volume ticks and manifest
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: free-commodity-ticks-2024-${{ matrix.instrument }}
-          path: free_commodity_ticks/${{ matrix.instrument }}/2024
+          name: free-commodity-volume-ticks-2024-${{ matrix.instrument }}
+          path: free_commodity_ticks_volume/${{ matrix.instrument }}/2024
           if-no-files-found: error
           retention-days: 7
           compression-level: 0
