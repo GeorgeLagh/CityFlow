@@ -1,0 +1,49 @@
+name: MM v3.6 free commodity ticks 2024
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'tmp_free_commodity_ticks/**'
+      - '.github/workflows/mm_v36_free_commodity_ticks_2024.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  download:
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        instrument:
+          - brentcmdusd
+          - lightcmdusd
+          - gascmdusd
+          - coppercmdusd
+          - xauusd
+          - xagusd
+          - soybeancmdusx
+          - coffeecmdusx
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download full 2024 tick history
+        run: bash tmp_free_commodity_ticks/download_2024.sh '${{ matrix.instrument }}' 2024
+      - name: Upload compressed raw ticks and manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: free-commodity-ticks-2024-${{ matrix.instrument }}
+          path: free_commodity_ticks/${{ matrix.instrument }}/2024
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
