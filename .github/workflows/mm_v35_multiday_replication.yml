@@ -1,0 +1,91 @@
+name: Market Metastability v3.5 multi-day replication
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'tmp_microfield_runner/v3_5/**'
+      - '.github/workflows/mm_v35_multiday_replication.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mm-v35-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  shard:
+    name: shard-${{ matrix.shard }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numerical stack
+        run: python -m pip install --upgrade pip numpy pandas scipy
+      - name: Materialize runner and self-test
+        run: |
+          base64 -d tmp_microfield_runner/v3_5/run_multiday_replication.py.gz.b64 | gzip -d > /tmp/run_multiday_replication.py
+          python /tmp/run_multiday_replication.py --self-test
+      - name: Run five-day shard
+        run: |
+          mkdir -p tmp_microfield_results_v35/shard_${{ matrix.shard }}
+          python /tmp/run_multiday_replication.py \
+            --shard ${{ matrix.shard }} \
+            --out tmp_microfield_results_v35/shard_${{ matrix.shard }} \
+            2>&1 | tee tmp_microfield_results_v35/shard_${{ matrix.shard }}/RUN.log
+      - name: Upload compact shard results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mm-v35-shard-${{ matrix.shard }}
+          path: tmp_microfield_results_v35/shard_${{ matrix.shard }}
+          retention-days: 7
+          if-no-files-found: error
+
+  aggregate:
+    name: aggregate-and-validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: shard
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numerical stack
+        run: python -m pip install --upgrade pip numpy pandas scipy
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mm-v35-shard-*
+          path: tmp_microfield_results_v35/collected
+      - name: Materialize runner
+        run: base64 -d tmp_microfield_runner/v3_5/run_multiday_replication.py.gz.b64 | gzip -d > /tmp/run_multiday_replication.py
+      - name: Aggregate random-effects transmission candidate
+        run: |
+          mkdir -p tmp_microfield_results_v35/aggregate
+          set +e
+          python /tmp/run_multiday_replication.py \
+            --aggregate tmp_microfield_results_v35/collected \
+            --out tmp_microfield_results_v35/aggregate \
+            2>&1 | tee tmp_microfield_results_v35/aggregate/RUN.log
+          code=${PIPESTATUS[0]}
+          echo "$code" > tmp_microfield_results_v35/aggregate/EXIT_CODE.txt
+          exit "$code"
+      - name: Upload final v3.5 artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mm-v35-final
+          path: tmp_microfield_results_v35
+          retention-days: 7
+          if-no-files-found: error
