@@ -1,0 +1,103 @@
+name: MM v3.9 frozen replication 2023 2025
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'tmp_v39_replication/**'
+      - '.github/workflows/mm_v39_frozen_replication.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  download:
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        year: [2023, 2025]
+        instrument:
+          - brentcmdusd
+          - lightcmdusd
+          - gascmdusd
+          - coppercmdusd
+          - xauusd
+          - xagusd
+          - soybeancmdusx
+          - coffeecmdusx
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen replication year with quote volumes
+        run: bash tmp_v39_replication/download_year.sh '${{ matrix.instrument }}' '${{ matrix.year }}'
+      - name: Upload raw replication carrier
+        uses: actions/upload-artifact@v4
+        with:
+          name: v39-volume-ticks-${{ matrix.year }}-${{ matrix.instrument }}
+          path: free_commodity_ticks_volume/${{ matrix.instrument }}/${{ matrix.year }}
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
+
+  analyze:
+    needs: download
+    strategy:
+      fail-fast: false
+      matrix:
+        year: [2023, 2025]
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install frozen analysis dependencies
+        run: python -m pip install --upgrade pip numpy pandas
+      - name: Download all eight carriers for this year
+        uses: actions/download-artifact@v4
+        with:
+          pattern: v39-volume-ticks-${{ matrix.year }}-*
+          path: raw
+      - name: Validate frozen runner syntax
+        run: python -m py_compile tmp_v39_replication/replicate_year.py
+      - name: Run independent-year frozen protocol
+        run: python tmp_v39_replication/replicate_year.py --year '${{ matrix.year }}' --raw raw --out 'v39_${{ matrix.year }}'
+      - name: Upload replication result
+        uses: actions/upload-artifact@v4
+        with:
+          name: v39-replication-results-${{ matrix.year }}
+          path: v39_${{ matrix.year }}/results
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
+
+  combine:
+    needs: analyze
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: v39-replication-results-*
+          path: replications
+      - name: Apply frozen cross-year decision rule
+        run: python tmp_v39_replication/combine_replications.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v39-cross-year-decision
+          path: v39_combined
+          if-no-files-found: error
+          retention-days: 30
