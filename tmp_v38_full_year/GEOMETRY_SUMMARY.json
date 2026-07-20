@@ -1,0 +1,26 @@
+{
+  "annual_geometry": {
+    "robust_lag_cells": 56,
+    "unique_directed_pairs": 15,
+    "density": 0.26785714285714285,
+    "reciprocity": 0.6666666666666666,
+    "largest_scc": 5,
+    "effective_singular_rank": 2.438272266774374,
+    "first_singular_energy": 0.7015376118715843,
+    "negative_edge_fraction": 0.9333333333333333
+  },
+  "strict_proxy_directions": [
+    "coppercmdusd->brentcmdusd",
+    "coppercmdusd->xagusd"
+  ],
+  "interpretation": "Predominantly quote-activity/log-volume relaxation geometry; not a causal commodity transmission network.",
+  "A1": "PROXY_OPERATIONAL",
+  "A2": "PROXY_OPERATIONAL",
+  "A3": "PROXY_OPERATIONAL",
+  "A4": "CANDIDATE_SUPPORTED",
+  "A5": "PARTIAL_PROXY",
+  "A6": "CANDIDATE",
+  "A7": "QUARANTINE",
+  "canonical_fan": "BLOCKED",
+  "free_fan": "CANDIDATE_ONLY"
+}
