@@ -1,0 +1,3 @@
+source,target,channel,lag_s,annual_effect,n_days,n_events,half1_mean,half1_p,half2_mean,half2_p,circular_placebo_mean,actual_minus_placebo,p_actual_minus_placebo,status
+coppercmdusd,brentcmdusd,activity,5,-0.5329083197083343,94,164,-0.6082733973415317,0.0015,-0.4435218322829141,0.02285,-0.11520464574379649,-0.4177036739645378,0.0006,STRICT_PROXY_DIRECTION_CANDIDATE
+coppercmdusd,xagusd,activity,5,-0.590218663660231,94,164,-0.7680810129388511,0.00005,-0.37926564474837937,0.00315,-0.06731556191343074,-0.5229031017468002,0.0001,STRICT_PROXY_DIRECTION_CANDIDATE

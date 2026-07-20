@@ -1,0 +1,16 @@
+{
+  "version": "3.8",
+  "raw_ticks": 118140732,
+  "analysis_window_utc": "13:30-17:00",
+  "resolution_seconds": 5,
+  "valid_days": 247,
+  "skipped_days": 1,
+  "events": 5092,
+  "daily_edge_rows": 356672,
+  "operator_cells": 1680,
+  "candidate_edges_initial": 57,
+  "operator_robust_same_sample": 56,
+  "strict_proxy_direction_candidates": 2,
+  "median_pc1_energy": 0.5540858418776621,
+  "semantic_status": "FREE_DATA_PROXY_OPERATOR; NOT CME/ICE MBO; NO PRICE TRANSMISSION SUPPORTED"
+}
