@@ -1,0 +1,104 @@
+name: Amsterdam MVE-UTO v6 empirical inputs
+
+on:
+  push:
+    branches:
+      - amsterdam-mve-v6-empirical-run
+    paths:
+      - research/amsterdam-mve-v6/**
+      - .github/workflows/amsterdam-mve-v6-empirical.yml
+  pull_request:
+    branches:
+      - master
+    paths:
+      - research/amsterdam-mve-v6/**
+      - .github/workflows/amsterdam-mve-v6-empirical.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  collect-and-harmonize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install geospatial dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            pandas pyarrow geopandas pyogrio shapely pyproj \
+            requests numpy scipy pyyaml osmium
+
+      - name: Collect and harmonize official Amsterdam inputs
+        id: collect
+        env:
+          AMSTERDAM_OUT: ${{ github.workspace }}/amsterdam_empirical_inputs
+        shell: bash
+        run: |
+          set +e
+          python research/amsterdam-mve-v6/collect_amsterdam_inputs.py 2>&1 | tee collector.log
+          code=${PIPESTATUS[0]}
+          echo "$code" > collector_exit_code.txt
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Validate empirical bundle when collection completed
+        if: steps.collect.outputs.exit_code == '0'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import pandas as pd
+          root = Path('amsterdam_empirical_inputs')
+          report = json.loads((root/'quality/collection_report.json').read_text())
+          theta = pd.read_parquet(root/'data/theta_structural_v6.parquet')
+          od = pd.read_parquet(root/'data/cbs_commute_od_amsterdam.parquet')
+          assert report['status'] == 'complete'
+          assert report['official_boundary'] is True
+          assert set(theta.field_id) == {'morph_built_fraction','morph_building_count','network_length_density'}
+          assert set(theta.scale_m.astype(int)) == {100,250,500,1000}
+          assert theta.observation_epoch.nunique() == 4
+          assert theta.groupby(['field_id','scale_m']).observation_epoch.nunique().min() >= 4
+          assert {'origin','destination','period','trips','purpose'}.issubset(od.columns)
+          assert len(od) > 0
+          assert (root/'raw/crowdmonitor_passanten.csv').stat().st_size > 1000
+          print(json.dumps({'theta_rows':len(theta),'od_rows':len(od),'status':'PASS'}, indent=2))
+          PY
+
+      - name: Assemble reproducible artifact including failure diagnostics
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p empirical_artifact/raw empirical_artifact/data empirical_artifact/quality
+          test -f collector.log && cp collector.log empirical_artifact/
+          test -f collector_exit_code.txt && cp collector_exit_code.txt empirical_artifact/
+          test -f amsterdam_empirical_inputs/raw/crowdmonitor_passanten.csv && cp amsterdam_empirical_inputs/raw/crowdmonitor_passanten.csv empirical_artifact/raw/
+          test -f amsterdam_empirical_inputs/raw/amsterdam_buurten.geojson && cp amsterdam_empirical_inputs/raw/amsterdam_buurten.geojson empirical_artifact/raw/
+          if test -d amsterdam_empirical_inputs/data; then find amsterdam_empirical_inputs/data -maxdepth 1 -type f -exec cp {} empirical_artifact/data/ \;; fi
+          if test -d amsterdam_empirical_inputs/quality; then find amsterdam_empirical_inputs/quality -maxdepth 1 -type f -exec cp {} empirical_artifact/quality/ \;; fi
+          cp research/amsterdam-mve-v6/collect_amsterdam_inputs.py empirical_artifact/
+          printf '%s\n' \
+            'MVE-UTO v6 empirical input bundle.' \
+            'BAG epochs are surviving-stock proxies; OSM epochs are mapping snapshots.' \
+            'Crowdmonitor is point flow; CBS OD is commute-only.' \
+            > empirical_artifact/SEMANTIC_LIMITS.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: amsterdam-mve-v6-empirical-inputs
+          path: empirical_artifact
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 6
+
+      - name: Preserve collector failure after artifact upload
+        if: steps.collect.outputs.exit_code != '0'
+        run: exit 1

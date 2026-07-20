@@ -1,0 +1,56 @@
+name: Amsterdam MVE-UTO v6 CBS commute OD
+
+on:
+  push:
+    branches:
+      - amsterdam-mve-v6-empirical-run
+    paths:
+      - research/amsterdam-mve-v6/collect_cbs_od.py
+      - .github/workflows/amsterdam-mve-v6-cbs-od.yml
+  pull_request:
+    branches:
+      - master
+    paths:
+      - research/amsterdam-mve-v6/collect_cbs_od.py
+      - .github/workflows/amsterdam-mve-v6-cbs-od.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  collect-cbs-od:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install pandas pyarrow cbsodata
+      - name: Collect exact-key Amsterdam commute OD
+        run: python research/amsterdam-mve-v6/collect_cbs_od.py
+      - name: Validate OD semantics
+        run: |
+          python - <<'PY'
+          import json
+          import pandas as pd
+          d = pd.read_parquet('cbs_od_artifact/cbs_commute_od_amsterdam.parquet')
+          r = json.load(open('cbs_od_artifact/cbs_od_report.json'))
+          assert r['status'] == 'pass'
+          assert len(d) > 0
+          assert set(d.purpose) == {'commute_residence_to_work'}
+          nodes = pd.concat([d.origin, d.destination], ignore_index=True).astype(str).str.strip().str.lower()
+          assert nodes.str.contains(r'^gm0363$|amsterdam', regex=True).any()
+          assert d.period.notna().all()
+          assert d.trips.notna().all()
+          print(r)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: amsterdam-mve-v6-cbs-commute-od
+          path: cbs_od_artifact
+          if-no-files-found: error
+          retention-days: 30
