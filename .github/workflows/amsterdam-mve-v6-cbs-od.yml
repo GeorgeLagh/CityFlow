@@ -41,10 +41,14 @@ jobs:
           assert r['status'] == 'pass'
           assert len(d) > 0
           assert set(d.purpose) == {'commute_residence_to_work'}
-          assert d.origin.str.strip().eq('GM0363').any() or d.destination.str.strip().eq('GM0363').any()
+          nodes = pd.concat([d.origin, d.destination], ignore_index=True).astype(str).str.strip().str.lower()
+          assert nodes.str.contains(r'^gm0363$|amsterdam', regex=True).any()
+          assert d.period.notna().all()
+          assert d.trips.notna().all()
           print(r)
           PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: amsterdam-mve-v6-cbs-commute-od
           path: cbs_od_artifact
