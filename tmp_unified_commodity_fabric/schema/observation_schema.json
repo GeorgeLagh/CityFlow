@@ -1,0 +1,17 @@
+{
+  "required_columns": [
+    "commodity_id", "instrument_id", "family", "source", "venue",
+    "observation_layer", "field", "value", "unit",
+    "reference_time", "available_time", "quality_status", "source_hash"
+  ],
+  "time_semantics": {
+    "reference_time": "time or period to which the value refers",
+    "available_time": "earliest UTC instant when the value could be known to the model",
+    "event_time": "native event timestamp where present"
+  },
+  "quality_status_values": ["VALID", "PROXY_VALID", "PARTIAL", "CANDIDATE", "BLOCKED_BY_DATA", "FALSIFIED"],
+  "forbidden_claims_without_mbo": [
+    "order_id", "queue_position", "true_cancel_flow", "iceberg_refresh",
+    "matching_engine_sequence", "full_depth_book", "aggressor_side"
+  ]
+}

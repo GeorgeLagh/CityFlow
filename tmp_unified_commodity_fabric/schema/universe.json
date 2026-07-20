@@ -1,0 +1,13 @@
+{
+  "version": "3.7",
+  "commodities": [
+    {"commodity_id":"BRENT","instrument_id":"brentcmdusd","family":"energy","carrier":"CFD_QUOTE_TICKS","native_exchange":"ICE_PROXY"},
+    {"commodity_id":"WTI","instrument_id":"lightcmdusd","family":"energy","carrier":"CFD_QUOTE_TICKS","native_exchange":"NYMEX_PROXY"},
+    {"commodity_id":"NATGAS","instrument_id":"gascmdusd","family":"energy","carrier":"CFD_QUOTE_TICKS","native_exchange":"NYMEX_PROXY"},
+    {"commodity_id":"COPPER","instrument_id":"coppercmdusd","family":"industrial_metals","carrier":"CFD_QUOTE_TICKS","native_exchange":"COMEX_LME_PROXY"},
+    {"commodity_id":"GOLD","instrument_id":"xauusd","family":"precious_metals","carrier":"SPOT_QUOTE_TICKS","native_exchange":"OTC_COMEX_PROXY"},
+    {"commodity_id":"SILVER","instrument_id":"xagusd","family":"precious_metals","carrier":"SPOT_QUOTE_TICKS","native_exchange":"OTC_COMEX_PROXY"},
+    {"commodity_id":"SOYBEAN","instrument_id":"soybeancmdusx","family":"agriculture","carrier":"CFD_QUOTE_TICKS","native_exchange":"CBOT_PROXY"},
+    {"commodity_id":"COFFEE","instrument_id":"coffeecmdusx","family":"agriculture","carrier":"CFD_QUOTE_TICKS","native_exchange":"ICE_PROXY"}
+  ]
+}
