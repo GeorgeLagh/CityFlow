@@ -1,0 +1,85 @@
+name: Amsterdam Meldingen Analytical Projection
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download selected fields by count-validated pages
+        run: |
+          mkdir -p out
+          python - <<'PY'
+          from __future__ import annotations
+          import csv,gzip,hashlib,json,math,time
+          from pathlib import Path
+          import requests
+          base='https://api.data.amsterdam.nl/v1/meldingen/meldingen'
+          fields=['id','hoofdcategorie','subcategorie','thema','datumMelding','tijdstipMelding','datumOverlast','tijdstipOverlast','externeStatus','meldingType','meldingSoort','gbdBuurtCode','gbdBuurtNaam','gbdWijkCode','gbdWijkNaam','gbdGgwgebiedCode','gbdGgwgebiedNaam','gbdStadsdeelCode','gbdStadsdeelNaam','bagWoonplaatsNaam','bron','laatstGezienBron','latitudeVisualisatie','longitudeVisualisatie']
+          out=Path('out');target=out/'meldingen_analytical_projection.csv.gz';s=requests.Session();s.headers.update({'User-Agent':'Amsterdam-configurational-crystallization-research/1.0','Accept':'text/csv'});csv.field_size_limit(100_000_000)
+          result={'source':base,'fields':fields,'pages':[]}
+          try:
+            c=s.get(base,params={'_pageSize':1,'_count':'true','_fields':','.join(fields)},timeout=180);c.raise_for_status();total=int(c.headers['X-Total-Count']);result['authoritative_total_count']=total
+            q={'_format':'csv','_pageSize':50000,'_count':'true','_fields':','.join(fields),'page':1}
+            first=out/'page_1.csv'
+            with s.get(base,params=q,stream=True,timeout=(30,1800)) as r:
+              r.raise_for_status();actual=int(r.headers.get('X-Pagination-Limit',50000));pages=int(r.headers.get('X-Pagination-Count') or math.ceil(total/actual));result['actual_page_size']=actual;result['total_pages']=pages
+              with first.open('wb') as f:
+                for b in r.iter_content(1048576):
+                  if b:f.write(b)
+            header=None;assembled=0
+            with gzip.open(target,'wb',compresslevel=6) as gz:
+              for page in range(1,pages+1):
+                tmp=first if page==1 else out/f'page_{page}.csv'
+                if page>1:
+                  qq={**q,'_pageSize':actual,'page':page};err=None
+                  for attempt in range(1,4):
+                    try:
+                      with s.get(base,params=qq,stream=True,timeout=(30,1800)) as r:
+                        r.raise_for_status()
+                        with tmp.open('wb') as f:
+                          for b in r.iter_content(1048576):
+                            if b:f.write(b)
+                      err=None;break
+                    except Exception as e:err=repr(e);time.sleep(attempt*5)
+                  if err:raise RuntimeError(f'page {page}: {err}')
+                rows=bad=0
+                with tmp.open('r',encoding='utf-8',newline='') as f:
+                  rd=csv.reader(f);h=next(rd)
+                  if header is None:header=h
+                  elif h!=header:raise RuntimeError(f'header mismatch page {page}')
+                  for row in rd:
+                    rows+=1
+                    if len(row)!=len(header):bad+=1
+                if bad:raise RuntimeError(f'bad rows page {page}: {bad}')
+                data=tmp.read_bytes()
+                if not data.endswith((b'\n',b'\r')):raise RuntimeError(f'truncated page {page}')
+                cut=data.find(b'\n');gz.write(data if page==1 else data[cut+1:]);assembled+=rows
+                result['pages'].append({'page':page,'rows':rows,'bytes':len(data)});tmp.unlink(missing_ok=True)
+            result['assembled_rows']=assembled;result['header']=header
+            if assembled!=total:raise RuntimeError(f'{assembled} != {total}')
+            h=hashlib.sha256()
+            with target.open('rb') as f:
+              for b in iter(lambda:f.read(1048576),b''):h.update(b)
+            result.update({'status':'downloaded_complete_count_validated','compressed_bytes':target.stat().st_size,'sha256':h.hexdigest()})
+          except Exception as e:result.update({'status':'error_or_incomplete','error':repr(e)})
+          (out/'manifest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8');print(json.dumps({k:result.get(k) for k in ['status','authoritative_total_count','assembled_rows','total_pages','compressed_bytes','error']},ensure_ascii=False,indent=2))
+          if result['status']!='downloaded_complete_count_validated':raise SystemExit(2)
+          PY
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amsterdam-meldingen-analytical-projection-20260721
+          path: out
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
