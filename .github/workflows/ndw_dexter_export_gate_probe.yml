@@ -1,0 +1,45 @@
+name: NDW Dexter Anonymous Export Gate Probe
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe export gate without creating a valid job
+        run: |
+          mkdir -p out
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          import requests
+          base='https://dexter.ndw.nu/api/export/opendata';out=Path('out')
+          s=requests.Session();s.headers.update({'User-Agent':'Amsterdam-configurational-crystallization-research/1.0','Accept':'application/json'})
+          results=[]
+          tests=[('OPTIONS',None),('GET',None),('POST',{}),('POST',{'version':1,'type':'OPEN_DATA','formArguments':{}})]
+          for i,(method,body) in enumerate(tests,1):
+            try:
+              r=s.request(method,base,json=body,timeout=120,allow_redirects=False)
+              content=r.content;(out/f'{i:02d}_{method}.bin').write_bytes(content)
+              results.append({'method':method,'body':body,'status_code':r.status_code,'content_type':r.headers.get('content-type'),'allow':r.headers.get('allow'),'www_authenticate':r.headers.get('www-authenticate'),'bytes':len(content),'sha256':hashlib.sha256(content).hexdigest(),'headers':dict(r.headers),'text_prefix':r.text[:4000]})
+            except Exception as e:results.append({'method':method,'body':body,'error':repr(e)})
+          report={'endpoint':base,'non_submitting_probe':True,'tests':results}
+          (out/'export_gate_probe.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(report,ensure_ascii=False,indent=2)[:20000])
+          PY
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ndw-dexter-anonymous-export-gate-probe-20260721
+          path: out
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
