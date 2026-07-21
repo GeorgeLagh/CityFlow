@@ -1,98 +1,52 @@
-name: Amsterdam Core Bulk-Validated Acquisition 20260722
+name: Amsterdam Bulk Registry Discovery 20260722
 on:
   pull_request:
     branches: [master]
 permissions:
   contents: read
 jobs:
-  acquire:
+  discover:
     if: github.head_ref == 'assistant/amsterdam-core-countvalidated-20260722'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - id: bbga_kerncijfers
-            url: https://api.data.amsterdam.nl/bulk-data/csv/bbga_v1_kerncijfers_openbaar.csv.zip
-            key: id
-          - id: loopfietsnetwerk_edges
-            url: https://api.data.amsterdam.nl/bulk-data/csv/loopfietsnetwerk_v1_edges_openbaar.csv.zip
-            key: id
-          - id: loopfietsnetwerk_nodes_poi
-            url: https://api.data.amsterdam.nl/bulk-data/csv/loopfietsnetwerk_v1_nodes_poi_openbaar.csv.zip
-            key: nodeId
-          - id: loopfietsnetwerk_poi_adressen
-            url: https://api.data.amsterdam.nl/bulk-data/csv/loopfietsnetwerk_v1_poi_adressen_openbaar.csv.zip
-            key: poiId
+        id:
+          - bbga_v1_kerncijfers_openbaar.csv.zip
+          - loopfietsnetwerk_v1_edges_openbaar.csv.zip
+          - loopfietsnetwerk_v1_nodes_poi_openbaar.csv.zip
+          - loopfietsnetwerk_v1_poi_adressen_openbaar.csv.zip
+          - loopfietsnetwerk_v1_compleet_openbaar.csv.zip
     steps:
       - uses: actions/checkout@v4
       - run: python -m pip install --quiet requests
-      - name: Download and fully validate ${{ matrix.id }}
+      - name: Resolve bulk registry record
         env:
-          DATASET_ID: ${{ matrix.id }}
-          BULK_URL: ${{ matrix.url }}
-          KEY_FIELD: ${{ matrix.key }}
+          BULK_ID: ${{ matrix.id }}
         run: |
           python - <<'PY'
-          import csv,hashlib,json,os,time,zipfile,requests
+          import json,os,requests,urllib.parse
           from pathlib import Path
-          sid=os.environ['DATASET_ID']; url=os.environ['BULK_URL']; key=os.environ['KEY_FIELD']
-          out=Path('out');out.mkdir(exist_ok=True)
-          zpath=out/f'{sid}.source.zip'
-          session=requests.Session();session.headers['User-Agent']='AmsterdamUrbanTransitionDataLake/8.0 research'
-          last=None
-          for i in range(7):
-              try:
-                  with session.get(url,stream=True,timeout=(30,1800)) as r:
-                      r.raise_for_status()
-                      with zpath.open('wb') as f:
-                          for chunk in r.iter_content(1024*1024):
-                              if chunk:f.write(chunk)
-                  break
-              except Exception as e:
-                  last=e
-                  if zpath.exists():zpath.unlink()
-                  time.sleep(min(60,2**i))
-          else: raise last
-          if zpath.stat().st_size<100: raise RuntimeError('bulk ZIP too small')
-          zsha=hashlib.sha256(zpath.read_bytes()).hexdigest()
-          with zipfile.ZipFile(zpath) as z:
-              bad=z.testzip()
-              if bad: raise RuntimeError(f'ZIP CRC failure: {bad}')
-              csv_names=[n for n in z.namelist() if n.lower().endswith('.csv') and not n.endswith('/')]
-              if len(csv_names)!=1: raise RuntimeError(f'expected exactly one CSV, found {csv_names}')
-              member=csv_names[0]
-              target=out/f'{sid}.csv'
-              with z.open(member) as src,target.open('wb') as dst:
-                  while True:
-                      b=src.read(1024*1024)
-                      if not b:break
-                      dst.write(b)
-          csv.field_size_limit(2_000_000_000)
-          rows=0; ids=set(); header=None; numeric=[]
-          with target.open('r',encoding='utf-8-sig',newline='') as f:
-              rr=csv.DictReader(f);header=rr.fieldnames
-              if not header or key not in header: raise RuntimeError(f'bad header: {header}')
-              for rec in rr:
-                  if None in rec: raise RuntimeError(f'malformed row at {rows+2}')
-                  rows+=1
-                  value=rec.get(key)
-                  if value:
-                      ids.add(value)
-          if rows==0: raise RuntimeError('empty CSV')
-          for value in ids:
-              try:numeric.append(int(value))
-              except:pass
-          csha=hashlib.sha256()
-          with target.open('rb') as f:
-              for b in iter(lambda:f.read(1048576),b''):csha.update(b)
-          manifest={'id':sid,'bulk_url':url,'zip_bytes':zpath.stat().st_size,'zip_sha256':zsha,'zip_crc':'PASS','member':member,'csv_bytes':target.stat().st_size,'csv_sha256':csha.hexdigest(),'parsed_rows':rows,'key_field':key,'unique_nonnull_keys':len(ids),'header':header,'numeric_key_min':min(numeric) if numeric else None,'numeric_key_max':max(numeric) if numeric else None,'status':'downloaded_bulk_zip_crc_and_csv_parse_validated'}
-          (out/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
-          print(json.dumps(manifest,indent=2))
+          bid=os.environ['BULK_ID'];out=Path('out');out.mkdir(exist_ok=True)
+          base='https://api.data.amsterdam.nl/v1/bulk_data/csv'
+          s=requests.Session();s.headers.update({'User-Agent':'AmsterdamUrbanTransitionDataLake/8.0 research','Accept':'application/hal+json'})
+          attempts=[]
+          urls=[base+'/'+urllib.parse.quote(bid,safe=''),base]
+          params=[None,{'id':bid},{'id[like]':'*'+bid.split('_v1_')[0]+'*'}]
+          for url in urls:
+              for par in params:
+                  try:
+                      r=s.get(url,params=par,timeout=120)
+                      entry={'url':r.url,'status':r.status_code,'headers':dict(r.headers),'text':r.text[:200000]}
+                      try:entry['json']=r.json()
+                      except:pass
+                      attempts.append(entry)
+                  except Exception as e:attempts.append({'url':url,'params':par,'error':repr(e)})
+          (out/'discovery.json').write_text(json.dumps({'bulk_id':bid,'attempts':attempts},ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'bulk_id':bid,'statuses':[x.get('status') for x in attempts],'urls':[x.get('url') for x in attempts]},indent=2))
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: amsterdam-core-${{ matrix.id }}-bulk-20260722
+          name: amsterdam-bulk-registry-${{ strategy.job-index }}-20260722
           path: out/
           retention-days: 7
-          compression-level: 0
