@@ -1,4 +1,4 @@
-name: Amsterdam Loopfiets Upper Bound Probe 20260722
+name: Amsterdam Loopfiets Fine Upper Bound Probe 20260722
 on:
   pull_request:
     branches: [master]
@@ -15,16 +15,13 @@ jobs:
           import csv,io,json,requests
           from pathlib import Path
           base='https://api.data.amsterdam.nl/v1/loopfietsnetwerk/edges';s=requests.Session();s.headers['User-Agent']='AmsterdamUrbanTransitionDataLake/8.0 research';out=Path('out');out.mkdir()
-          thresholds=[800000,900000,1000000,1200000,1500000,2000000,3000000]
-          res=[]
+          thresholds=list(range(2100000,3000001,100000));res=[]
           for t in thresholds:
-              p={'_format':'csv','_pageSize':1,'id[gte]':t};r=s.get(base,params=p,timeout=120);r.raise_for_status();rr=csv.DictReader(io.StringIO(r.content.decode('utf-8-sig'),newline=''));first=next(rr,None);res.append({'threshold':t,'url':r.url,'has_record':first is not None,'first_id':None if first is None else first.get('id'),'bytes':len(r.content)})
-              print(res[-1],flush=True)
-          p={'_format':'csv','_pageSize':1,'id[lt]':0};r=s.get(base,params=p,timeout=120);r.raise_for_status();rr=csv.DictReader(io.StringIO(r.content.decode('utf-8-sig'),newline=''));first=next(rr,None);res.append({'threshold':'below_zero','url':r.url,'has_record':first is not None,'first_id':None if first is None else first.get('id'),'bytes':len(r.content)})
-          (out/'upper_bound_probe.json').write_text(json.dumps(res,indent=2),encoding='utf-8')
+              p={'_format':'csv','_pageSize':1,'id[gte]':t};r=s.get(base,params=p,timeout=120);r.raise_for_status();rr=csv.DictReader(io.StringIO(r.content.decode('utf-8-sig'),newline=''));first=next(rr,None);res.append({'threshold':t,'has_record':first is not None,'first_id':None if first is None else first.get('id'),'bytes':len(r.content),'url':r.url});print(res[-1],flush=True)
+          (out/'fine_upper_bound_probe.json').write_text(json.dumps(res,indent=2),encoding='utf-8')
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: amsterdam-loop-edges-upper-bound-probe-20260722
+          name: amsterdam-loop-edges-fine-upper-bound-probe-20260722
           path: out/
           retention-days: 7
