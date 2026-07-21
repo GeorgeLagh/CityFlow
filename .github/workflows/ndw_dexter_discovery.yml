@@ -11,81 +11,96 @@ permissions:
 jobs:
   discover:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch Dexter pages and inspect frontend assets
+      - name: Recursively crawl Dexter frontend chunks and service routes
         run: |
           python -m pip install --quiet beautifulsoup4 requests
           mkdir -p out/pages out/assets
           python - <<'PY'
           from __future__ import annotations
           import hashlib,json,re
+          from collections import deque
           from pathlib import Path
           from urllib.parse import urljoin,urlparse
           import requests
           from bs4 import BeautifulSoup
 
-          out=Path('out')
-          urls=[
-            'https://dexter.ndw.nu/opendata/',
-            'https://dexter.ndw.nu/opendata/bicycle/',
-            'https://dexter.ndw.nu/opendata/expert-avg',
-            'https://dexter.ndw.nu/robots.txt',
-            'https://dexter.ndw.nu/manifest.json',
-            'https://dexter.ndw.nu/asset-manifest.json',
+          root='https://dexter.ndw.nu/'
+          pages=[
+            root+'opendata/', root+'opendata/bicycle/', root+'opendata/expert-avg',
+            root+'assets/set-env.js', root+'assets/manifest.json',
           ]
-          s=requests.Session();s.headers.update({'User-Agent':'Amsterdam-configurational-crystallization-research/1.0'})
-          manifest={'pages':[],'assets':[],'candidate_endpoints':[]}
-          assets=[]
-          for i,u in enumerate(urls,1):
+          out=Path('out');s=requests.Session();s.headers.update({'User-Agent':'Amsterdam-configurational-crystallization-research/1.0'})
+          manifest={'pages':[],'assets':[],'candidate_endpoints':[],'candidate_strings':[]}
+          queue=deque();seen=set();candidates=set();strings=set()
+          for i,u in enumerate(pages,1):
             try:
-              r=s.get(u,timeout=120,allow_redirects=True)
+              r=s.get(u,timeout=120,allow_redirects=True);r.raise_for_status()
               fn=f'{i:02d}_{re.sub(r"[^A-Za-z0-9._-]+","_",urlparse(u).path.strip("/") or "root")}.bin'
               (out/'pages'/fn).write_bytes(r.content)
-              rec={'requested_url':u,'resolved_url':r.url,'status_code':r.status_code,'content_type':r.headers.get('content-type'),'bytes':len(r.content),'sha256':hashlib.sha256(r.content).hexdigest(),'headers':dict(r.headers),'saved_as':fn}
-              manifest['pages'].append(rec)
-              if 'html' in (r.headers.get('content-type') or '').lower():
+              manifest['pages'].append({'requested_url':u,'resolved_url':r.url,'status_code':r.status_code,'content_type':r.headers.get('content-type'),'bytes':len(r.content),'sha256':hashlib.sha256(r.content).hexdigest(),'headers':dict(r.headers),'saved_as':fn})
+              ctype=(r.headers.get('content-type') or '').lower()
+              if 'html' in ctype:
                 soup=BeautifulSoup(r.text,'html.parser')
+                base_el=soup.find('base',href=True);base=urljoin(r.url,base_el['href']) if base_el else r.url
                 for tag,attr in [('script','src'),('link','href')]:
                   for el in soup.find_all(tag):
                     v=el.get(attr)
                     if not v:continue
-                    full=urljoin(r.url,v)
-                    if full.startswith('https://dexter.ndw.nu/') and full not in assets:
-                      assets.append(full)
+                    full=urljoin(base,v)
+                    if full.startswith(root) and (full.endswith('.js') or full.endswith('.json')):queue.append(full)
+              elif u.endswith(('.js','.json')):
+                queue.append(u)
             except Exception as e:
               manifest['pages'].append({'requested_url':u,'error':repr(e)})
-          endpoint_patterns=[
-            r'https?://[^"\'<>\\\s]+',
-            r'/(?:api|graphql|swagger|openapi|download|export|data|measurements?|locations?|traffic|bicycle)[A-Za-z0-9_./?=&{}:-]*',
+
+          import_patterns=[
+            r'(?:from|import)\s*\(?["\'](\./[^"\']+\.js)["\']\)?',
+            r'["\'](\./(?:chunk|main|polyfills|export|dashboard|map|location|measurement)[^"\']+\.js)["\']',
           ]
-          candidates=set()
-          for i,u in enumerate(assets,1):
+          url_pat=re.compile(r'https?://[^"\'<>\\\s]+',re.I)
+          path_pat=re.compile(r'/(?:api|v\d+|graphql|swagger|openapi|download|export|data|measurements?|locations?|traffic|bicycle|timeseries|aggregation|map)[A-Za-z0-9_./?=&{}:$-]*',re.I)
+          quoted_pat=re.compile(r'["\'`]([^"\'`]{2,500})["\'`]',re.S)
+          while queue and len(seen)<600:
+            u=queue.popleft()
+            if u in seen:continue
+            seen.add(u)
             try:
-              r=s.get(u,timeout=120);r.raise_for_status()
-              ext=Path(urlparse(u).path).suffix or '.bin'
-              fn=f'{i:03d}_{hashlib.sha1(u.encode()).hexdigest()[:10]}{ext}'
+              r=s.get(u,timeout=180);r.raise_for_status()
+              ctype=(r.headers.get('content-type') or '').lower()
+              if 'html' in ctype:raise RuntimeError('received HTML fallback instead of asset')
+              ext=Path(urlparse(u).path).suffix or '.bin';fn=f'{len(seen):04d}_{Path(urlparse(u).path).name}'
               (out/'assets'/fn).write_bytes(r.content)
-              text=r.text if any(x in (r.headers.get('content-type') or '').lower() for x in ['javascript','json','text','css']) else ''
-              for pat in endpoint_patterns:
-                for m in re.finditer(pat,text,re.I):
-                  val=m.group(0).replace('\\/','/')
-                  if any(k in val.lower() for k in ['api','download','export','measurement','location','traffic','bicycle','graphql','swagger','openapi']):
-                    candidates.add(val[:1000])
               manifest['assets'].append({'url':u,'status_code':r.status_code,'content_type':r.headers.get('content-type'),'bytes':len(r.content),'sha256':hashlib.sha256(r.content).hexdigest(),'saved_as':fn})
+              text=r.text if any(x in ctype for x in ['javascript','json','text']) or u.endswith(('.js','.json')) else ''
+              if not text:continue
+              for pat in import_patterns:
+                for m in re.finditer(pat,text):
+                  child=urljoin(u,m.group(1))
+                  if child.startswith(root) and child not in seen:queue.append(child)
+              for m in url_pat.finditer(text):
+                v=m.group(0).replace('\\/','/')
+                if any(k in v.lower() for k in ['api','export','download','measurement','location','traffic','bicycle','dexter']):candidates.add(v[:1000])
+              for m in path_pat.finditer(text):candidates.add(m.group(0)[:1000])
+              for m in quoted_pat.finditer(text):
+                v=m.group(1).replace('\\/','/')
+                if any(k in v.lower() for k in ['export','measurement','location','traffic','bicycle','intensity','speed','flow','aggregation','timeseries','open data','opendata']):
+                  strings.add(v[:500])
             except Exception as e:
               manifest['assets'].append({'url':u,'error':repr(e)})
           manifest['candidate_endpoints']=sorted(candidates)
-          manifest['cookies']=s.cookies.get_dict()
+          manifest['candidate_strings']=sorted(strings)
+          manifest['cookies']=s.cookies.get_dict();manifest['assets_seen']=len(seen);manifest['queue_remaining']=len(queue)
           (out/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
-          print(json.dumps({'pages':len(manifest['pages']),'assets':len(manifest['assets']),'candidate_endpoints':len(candidates)},indent=2))
+          print(json.dumps({'pages':len(manifest['pages']),'assets_ok':sum('error' not in x for x in manifest['assets']),'assets_seen':len(seen),'candidate_endpoints':len(candidates),'candidate_strings':len(strings),'queue_remaining':len(queue)},indent=2))
           PY
       - name: Upload discovery artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ndw-dexter-open-data-discovery-20260721
+          name: ndw-dexter-open-data-recursive-discovery-20260721
           path: out
           if-no-files-found: error
           compression-level: 0
