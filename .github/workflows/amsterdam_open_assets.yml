@@ -1,0 +1,103 @@
+name: Amsterdam Open Assets Acquisition
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fetch-open:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        target:
+          - {id: verkeersinformatiesystemen, base: 'https://api.data.amsterdam.nl/v1/verkeersinformatiesystemen/verkeersinformatiesystemen', temporal: 'false'}
+          - {id: winkelgebieden, base: 'https://api.data.amsterdam.nl/v1/winkelgebieden/winkelgebieden', temporal: 'false'}
+          - {id: bedrijveninvesteringszones_gebieden, base: 'https://api.data.amsterdam.nl/v1/bedrijveninvesteringszones/gebieden', temporal: 'false'}
+          - {id: woningbouwplannen_openbaar, base: 'https://api.data.amsterdam.nl/v1/nieuwbouwplannen/woningbouwplannenOpenbaar', temporal: 'false'}
+          - {id: gebieden_bouwblokken_history, base: 'https://api.data.amsterdam.nl/v1/gebieden/bouwblokken', temporal: 'true'}
+          - {id: bag_openbareruimtes_history, base: 'https://api.data.amsterdam.nl/v1/bag/openbareruimtes', temporal: 'true'}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch ${{ matrix.target.id }}
+        run: |
+          mkdir -p out
+          python - <<'PY'
+          from __future__ import annotations
+          import csv,gzip,hashlib,json,math,time
+          from pathlib import Path
+          import requests
+          ident='${{ matrix.target.id }}'; base='${{ matrix.target.base }}'; temporal='${{ matrix.target.temporal }}'=='true'
+          out=Path('out'); page_size=50000; result={'id':ident,'base':base,'temporal_wildcard':temporal,'pages':[]}
+          s=requests.Session();s.headers.update({'User-Agent':'Amsterdam-configurational-crystallization-research/1.0','Accept':'text/csv'})
+          csv.field_size_limit(100_000_000)
+          try:
+              cp={'_pageSize':1,'_count':'true'}
+              if temporal: cp['geldigOp']='*'
+              r=s.get(base,params=cp,timeout=180);r.raise_for_status()
+              total=int(r.headers['X-Total-Count']);result['authoritative_total_count']=total
+              pp={'_format':'csv','_pageSize':page_size,'_count':'true','page':1}
+              if temporal: pp['geldigOp']='*'
+              first=out/'page_1.csv'
+              with s.get(base,params=pp,stream=True,timeout=(30,1800)) as rr:
+                  rr.raise_for_status(); actual=int(rr.headers.get('X-Pagination-Limit',page_size)); pages=int(rr.headers.get('X-Pagination-Count') or math.ceil(total/actual))
+                  result['actual_page_size']=actual;result['total_pages']=pages
+                  if pages>100: raise RuntimeError(f'{pages} pages exceeds API maximum')
+                  with first.open('wb') as f:
+                      for c in rr.iter_content(1048576):
+                          if c:f.write(c)
+              outfile=out/(ident+'.csv.gz'); header=None; assembled=0
+              with gzip.open(outfile,'wb',compresslevel=6) as gz:
+                  for page in range(1,pages+1):
+                      tmp=first if page==1 else out/f'page_{page}.csv'
+                      if page>1:
+                          q={'_format':'csv','_pageSize':actual,'_count':'true','page':page}
+                          if temporal:q['geldigOp']='*'
+                          err=None
+                          for attempt in range(1,4):
+                              try:
+                                  with s.get(base,params=q,stream=True,timeout=(30,1800)) as pr:
+                                      pr.raise_for_status()
+                                      with tmp.open('wb') as f:
+                                          for c in pr.iter_content(1048576):
+                                              if c:f.write(c)
+                                  err=None;break
+                              except Exception as e:err=repr(e);time.sleep(5*attempt)
+                          if err:raise RuntimeError(err)
+                      rows=bad=0
+                      with tmp.open('r',encoding='utf-8',newline='') as f:
+                          rd=csv.reader(f);h=next(rd)
+                          if header is None:header=h
+                          elif h!=header:raise RuntimeError(f'header mismatch page {page}')
+                          for row in rd:
+                              rows+=1
+                              if len(row)!=len(header):bad+=1
+                      if bad:raise RuntimeError(f'bad rows page {page}: {bad}')
+                      b=tmp.read_bytes()
+                      if not b.endswith((b'\n',b'\r')):raise RuntimeError(f'page {page} truncated')
+                      cut=b.find(b'\n');gz.write(b if page==1 else b[cut+1:]);assembled+=rows
+                      result['pages'].append({'page':page,'rows':rows,'bytes':len(b)});tmp.unlink(missing_ok=True)
+              result['assembled_rows']=assembled;result['header']=header
+              if assembled!=total:raise RuntimeError(f'{assembled}!={total}')
+              h=hashlib.sha256(outfile.read_bytes()).hexdigest()
+              result.update({'status':'downloaded_complete_count_validated','compressed_bytes':outfile.stat().st_size,'sha256':h})
+          except Exception as e:result.update({'status':'error_or_incomplete','error':repr(e)})
+          (out/'manifest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(result,ensure_ascii=False,indent=2))
+          if result['status']!='downloaded_complete_count_validated':raise SystemExit(2)
+          PY
+      - name: Upload ${{ matrix.target.id }}
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amsterdam-open-${{ matrix.target.id }}-20260721
+          path: out
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
