@@ -1,27 +1,83 @@
-name: Amsterdam Loopfiets Fine Upper Bound Probe 20260722
+name: Amsterdam Loopfiets Remaining Edge Shards 20260722
 on:
   pull_request:
     branches: [master]
 permissions:
   contents: read
 jobs:
-  probe:
+  acquire:
     if: github.head_ref == 'assistant/amsterdam-core-countvalidated-20260722'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {shard: 800000_1000000, start: 800000, end: 1000000}
+          - {shard: 1000000_1200000, start: 1000000, end: 1200000}
+          - {shard: 1200000_1400000, start: 1200000, end: 1400000}
+          - {shard: 1400000_1600000, start: 1400000, end: 1600000}
+          - {shard: 1600000_1800000, start: 1600000, end: 1800000}
+          - {shard: 1800000_2000000, start: 1800000, end: 2000000}
+          - {shard: 2000000_2200000, start: 2000000, end: 2200000}
     steps:
+      - uses: actions/checkout@v4
       - run: python -m pip install --quiet requests
-      - run: |
+      - name: Acquire ${{ matrix.shard }}
+        env:
+          START: ${{ matrix.start }}
+          END: ${{ matrix.end }}
+          SHARD: ${{ matrix.shard }}
+        run: |
           python - <<'PY'
-          import csv,io,json,requests
+          import csv,gzip,hashlib,io,json,os,time,requests
           from pathlib import Path
-          base='https://api.data.amsterdam.nl/v1/loopfietsnetwerk/edges';s=requests.Session();s.headers['User-Agent']='AmsterdamUrbanTransitionDataLake/8.0 research';out=Path('out');out.mkdir()
-          thresholds=list(range(2100000,3000001,100000));res=[]
-          for t in thresholds:
-              p={'_format':'csv','_pageSize':1,'id[gte]':t};r=s.get(base,params=p,timeout=120);r.raise_for_status();rr=csv.DictReader(io.StringIO(r.content.decode('utf-8-sig'),newline=''));first=next(rr,None);res.append({'threshold':t,'has_record':first is not None,'first_id':None if first is None else first.get('id'),'bytes':len(r.content),'url':r.url});print(res[-1],flush=True)
-          (out/'fine_upper_bound_probe.json').write_text(json.dumps(res,indent=2),encoding='utf-8')
+          start=int(os.environ['START']);end=int(os.environ['END']);shard=os.environ['SHARD'];base='https://api.data.amsterdam.nl/v1/loopfietsnetwerk/edges';out=Path('out');out.mkdir()
+          s=requests.Session();s.headers['User-Agent']='AmsterdamUrbanTransitionDataLake/8.0 research'
+          def get(a,b):
+              last=None;par={'_format':'csv','id[gte]':a,'id[lt]':b}
+              for i in range(8):
+                  try:r=s.get(base,params=par,timeout=(30,600));r.raise_for_status();return r
+                  except Exception as e:last=e;time.sleep(min(60,2**i))
+              raise last
+          target=out/f'loop_edges_{shard}.csv.gz';header=None;rows=0;keys=set();chunks=[]
+          try:
+              with gzip.open(target,'wt',encoding='utf-8',newline='',compresslevel=6) as fo:
+                  writer=None
+                  for a in range(start,end,2000):
+                      b=min(a+2000,end);r=get(a,b);data=r.content;rr=csv.DictReader(io.StringIO(data.decode('utf-8-sig'),newline=''))
+                      if header is None:
+                          header=rr.fieldnames
+                          if not header or 'id' not in header:raise RuntimeError(f'bad header {header}')
+                          writer=csv.DictWriter(fo,fieldnames=header,lineterminator='\n');writer.writeheader()
+                      elif rr.fieldnames!=header:raise RuntimeError(f'schema drift {r.url}')
+                      n=0
+                      for rec in rr:
+                          if None in rec:raise RuntimeError(f'malformed row {r.url}')
+                          x=int(rec['id'])
+                          if not a<=x<b:raise RuntimeError(f'out-of-range {x}')
+                          if x in keys:raise RuntimeError(f'duplicate {x}')
+                          keys.add(x);writer.writerow(rec);rows+=1;n+=1
+                      chunks.append({'from':a,'to':b,'rows':n,'bytes':len(data)})
+                      print(shard,a,b,n,rows,flush=True)
+              parsed=0
+              with gzip.open(target,'rt',encoding='utf-8',newline='') as f:
+                  for rec in csv.DictReader(f):
+                      if None in rec:raise RuntimeError('malformed assembled row')
+                      parsed+=1
+              if parsed!=rows:raise RuntimeError(f'count mismatch {parsed}!={rows}')
+              h=hashlib.sha256()
+              with target.open('rb') as f:
+                  for block in iter(lambda:f.read(1048576),b''):h.update(block)
+              manifest={'shard':shard,'start':start,'end':end,'rows':rows,'parsed_rows':parsed,'unique_ids':len(keys),'id_min':min(keys) if keys else None,'id_max':max(keys) if keys else None,'header':header,'chunks':chunks,'sha256':h.hexdigest(),'status':'downloaded_range_partition_validated'}
+          except Exception as e:
+              manifest={'shard':shard,'start':start,'end':end,'rows_before_failure':rows,'chunks':chunks,'status':'failed','error':repr(e)}
+              (out/'error.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8');print(json.dumps(manifest,indent=2));raise
+          (out/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8');print(json.dumps(manifest,indent=2))
           PY
-      - uses: actions/upload-artifact@v4
+      - if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: amsterdam-loop-edges-fine-upper-bound-probe-20260722
+          name: amsterdam-loop-edges-${{ matrix.shard }}-20260722
           path: out/
           retention-days: 7
+          compression-level: 0
