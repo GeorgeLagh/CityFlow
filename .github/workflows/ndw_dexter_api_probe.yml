@@ -1,0 +1,106 @@
+name: NDW Dexter Open Data API Probe
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe GIS and historical explorer APIs
+        run: |
+          mkdir -p out
+          python - <<'PY'
+          from __future__ import annotations
+          import hashlib,json
+          from pathlib import Path
+          import requests
+
+          base='https://dexter.ndw.nu';out=Path('out')
+          s=requests.Session();s.headers.update({'User-Agent':'Amsterdam-configurational-crystallization-research/1.0','Accept':'application/json'})
+          result={'base':base,'gets':[],'posts':[]}
+          data={}
+          endpoints={
+            'avg_indexes':'/api/explore/avg/indexes',
+            'avg_points':'/api/gis/avg/complete/points',
+            'avg_trajectories':'/api/gis/avg/complete/trajectories',
+            'bicycle_points':'/api/gis/bicycle-data/complete',
+          }
+          for name,path in endpoints.items():
+            try:
+              r=s.get(base+path,timeout=300);content=r.content
+              rec={'name':name,'path':path,'status_code':r.status_code,'content_type':r.headers.get('content-type'),'bytes':len(content),'sha256':hashlib.sha256(content).hexdigest(),'headers':dict(r.headers)}
+              (out/f'{name}.bin').write_bytes(content)
+              try:
+                j=r.json();data[name]=j
+                rec['json_type']=type(j).__name__
+                if isinstance(j,dict):rec['json_keys']=list(j)[:30]
+                if isinstance(j,list):rec['json_length']=len(j)
+              except Exception as e:rec['json_error']=repr(e);rec['text_prefix']=r.text[:1000]
+              result['gets'].append(rec)
+            except Exception as e:result['gets'].append({'name':name,'path':path,'error':repr(e)})
+
+          def coords(feat):
+            g=feat.get('geometry') or {};c=g.get('coordinates')
+            if not isinstance(c,list):return None
+            while c and isinstance(c[0],list):c=c[0]
+            return c if len(c)>=2 else None
+          def loc_id(feat):
+            p=feat.get('properties') or {}
+            return p.get('dgl_loc') or p.get('dglLoc') or p.get('locationId') or p.get('id') or feat.get('id')
+          selected_avg=None
+          fc=data.get('avg_points') or {}
+          for f in fc.get('features',[]) if isinstance(fc,dict) else []:
+            c=coords(f)
+            if c and 4.65<=float(c[0])<=5.10 and 52.20<=float(c[1])<=52.50 and loc_id(f):
+              selected_avg={'id':loc_id(f),'coordinates':c,'properties':f.get('properties')};break
+          result['selected_avg']=selected_avg
+          if selected_avg:
+            body={'startTime':'2024-01-01T00:00:00+01:00','endTime':'2024-01-02T00:00:00+01:00','locations':[selected_avg['id']]}
+            try:
+              r=s.post(base+'/api/explore/avg/location',json=body,timeout=300);content=r.content
+              rec={'name':'avg_location_history','path':'/api/explore/avg/location','body':body,'status_code':r.status_code,'content_type':r.headers.get('content-type'),'bytes':len(content),'sha256':hashlib.sha256(content).hexdigest(),'headers':dict(r.headers),'text_prefix':r.text[:1000]}
+              (out/'avg_location_history.bin').write_bytes(content)
+              try:
+                j=r.json();rec['json_type']=type(j).__name__;rec['json_length']=len(j) if isinstance(j,list) else None;rec['json_keys']=list(j)[:30] if isinstance(j,dict) else None
+              except Exception as e:rec['json_error']=repr(e)
+              result['posts'].append(rec)
+            except Exception as e:result['posts'].append({'name':'avg_location_history','body':body,'error':repr(e)})
+
+          selected_bicycle=None
+          fc=data.get('bicycle_points') or {}
+          for f in fc.get('features',[]) if isinstance(fc,dict) else []:
+            c=coords(f)
+            if c and 4.65<=float(c[0])<=5.10 and 52.20<=float(c[1])<=52.50 and loc_id(f):
+              selected_bicycle={'id':loc_id(f),'coordinates':c,'properties':f.get('properties')};break
+          result['selected_bicycle']=selected_bicycle
+          if selected_bicycle:
+            body={'startTime':'2024-01-01T00:00:00+01:00','endTime':'2024-01-08T00:00:00+01:00','locations':[selected_bicycle['id']]}
+            try:
+              r=s.post(base+'/api/explore/bicycle-data',json=body,timeout=300);content=r.content
+              rec={'name':'bicycle_history','path':'/api/explore/bicycle-data','body':body,'status_code':r.status_code,'content_type':r.headers.get('content-type'),'bytes':len(content),'sha256':hashlib.sha256(content).hexdigest(),'headers':dict(r.headers),'text_prefix':r.text[:1000]}
+              (out/'bicycle_history.bin').write_bytes(content)
+              try:
+                j=r.json();rec['json_type']=type(j).__name__;rec['json_length']=len(j) if isinstance(j,list) else None;rec['json_keys']=list(j)[:30] if isinstance(j,dict) else None
+              except Exception as e:rec['json_error']=repr(e)
+              result['posts'].append(rec)
+            except Exception as e:result['posts'].append({'name':'bicycle_history','body':body,'error':repr(e)})
+          (out/'probe.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(result,ensure_ascii=False,indent=2)[:20000])
+          PY
+      - name: Upload probe artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ndw-dexter-open-data-api-probe-20260721
+          path: out
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
