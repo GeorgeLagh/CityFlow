@@ -1,0 +1,106 @@
+name: Amsterdam Count Validated Paged Large Acquisition
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fetch-large:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        target:
+          - {id: standvastgoed_gebouwen_history, base: 'https://api.data.amsterdam.nl/v1/standvastgoed/gebouwen', temporal: 'true'}
+          - {id: meldingen_full, base: 'https://api.data.amsterdam.nl/v1/meldingen/meldingen', temporal: 'false'}
+          - {id: woz_deelobjecten_history_full, base: 'https://api.data.amsterdam.nl/v1/woz/deelobjecten', temporal: 'true'}
+          - {id: bag_panden_history_full, base: 'https://api.data.amsterdam.nl/v1/bag/panden', temporal: 'true'}
+          - {id: bag_verblijfsobjecten_history_full, base: 'https://api.data.amsterdam.nl/v1/bag/verblijfsobjecten', temporal: 'true'}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch ${{ matrix.target.id }} by validated pages
+        run: |
+          mkdir -p out
+          python - <<'PY'
+          from __future__ import annotations
+          import csv,gzip,hashlib,json,math,time
+          from pathlib import Path
+          import requests
+          ident='${{ matrix.target.id }}'; base='${{ matrix.target.base }}'; temporal='${{ matrix.target.temporal }}'=='true'
+          outdir=Path('out'); outfile=outdir/(ident+'.csv.gz'); page_size=50000
+          s=requests.Session();s.headers.update({'User-Agent':'Amsterdam-configurational-crystallization-research/1.0','Accept':'text/csv'})
+          csv.field_size_limit(100_000_000)
+          result={'id':ident,'base':base,'temporal_wildcard':temporal,'requested_page_size':page_size,'pages':[]}
+          try:
+              cp={'_pageSize':1,'_count':'true'}
+              if temporal:cp['geldigOp']='*'
+              r=s.get(base,params=cp,timeout=180);r.raise_for_status();total=int(r.headers['X-Total-Count'])
+              result['authoritative_total_count']=total;result['count_headers']={k:v for k,v in r.headers.items() if k.lower().startswith('x-')}
+              pp={'_format':'csv','_pageSize':page_size,'_count':'true','page':1}
+              if temporal:pp['geldigOp']='*'
+              first=outdir/'page_1.csv'
+              with s.get(base,params=pp,stream=True,timeout=(30,2400)) as pr:
+                  pr.raise_for_status();actual=int(pr.headers.get('X-Pagination-Limit',page_size));pages=int(pr.headers.get('X-Pagination-Count') or math.ceil(total/actual))
+                  result['actual_page_size']=actual;result['total_pages']=pages
+                  if pages>100:raise RuntimeError(f'{pages} pages exceeds API maximum')
+                  with first.open('wb') as f:
+                      for c in pr.iter_content(1048576):
+                          if c:f.write(c)
+              header=None;assembled=0
+              with gzip.open(outfile,'wb',compresslevel=6) as gz:
+                  for page in range(1,pages+1):
+                      tmp=first if page==1 else outdir/f'page_{page}.csv';headers={}
+                      if page>1:
+                          q={'_format':'csv','_pageSize':actual,'_count':'true','page':page}
+                          if temporal:q['geldigOp']='*'
+                          err=None
+                          for attempt in range(1,4):
+                              try:
+                                  with s.get(base,params=q,stream=True,timeout=(30,2400)) as rr:
+                                      rr.raise_for_status();headers={k:v for k,v in rr.headers.items() if k.lower().startswith('x-')}
+                                      with tmp.open('wb') as f:
+                                          for c in rr.iter_content(1048576):
+                                              if c:f.write(c)
+                                  err=None;break
+                              except Exception as e:err=repr(e);time.sleep(attempt*5)
+                          if err:raise RuntimeError(f'page {page}: {err}')
+                      rows=bad=0
+                      with tmp.open('r',encoding='utf-8',newline='') as f:
+                          rd=csv.reader(f);h=next(rd)
+                          if header is None:header=h
+                          elif h!=header:raise RuntimeError(f'header mismatch page {page}')
+                          for row in rd:
+                              rows+=1
+                              if len(row)!=len(header):bad+=1
+                      if bad:raise RuntimeError(f'bad rows page {page}: {bad}')
+                      b=tmp.read_bytes()
+                      if not b.endswith((b'\n',b'\r')):raise RuntimeError(f'page {page} truncated')
+                      cut=b.find(b'\n')
+                      gz.write(b if page==1 else b[cut+1:]);assembled+=rows
+                      result['pages'].append({'page':page,'rows':rows,'bytes':len(b),'headers':headers});tmp.unlink(missing_ok=True)
+              result['assembled_rows']=assembled;result['columns']=len(header or []);result['header']=header
+              if assembled!=total:raise RuntimeError(f'{assembled} rows != {total}')
+              h=hashlib.sha256()
+              with outfile.open('rb') as f:
+                  for c in iter(lambda:f.read(1048576),b''):h.update(c)
+              result.update({'status':'downloaded_complete_count_validated','compressed_bytes':outfile.stat().st_size,'sha256':h.hexdigest()})
+          except Exception as e:result.update({'status':'error_or_incomplete','error':repr(e)})
+          (outdir/'manifest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({k:result.get(k) for k in ['id','status','authoritative_total_count','assembled_rows','total_pages','compressed_bytes','error']},ensure_ascii=False,indent=2))
+          if result['status']!='downloaded_complete_count_validated':raise SystemExit(2)
+          PY
+      - name: Upload ${{ matrix.target.id }}
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amsterdam-paged-${{ matrix.target.id }}-20260721
+          path: out
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
