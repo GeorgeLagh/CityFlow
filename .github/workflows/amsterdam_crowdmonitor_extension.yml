@@ -1,0 +1,111 @@
+name: Amsterdam Crowdmonitor Hourly Extension Acquisition
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download count-validated hourly Crowdmonitor extension
+        run: |
+          mkdir -p out
+          python - <<'PY'
+          from __future__ import annotations
+          import csv,gzip,hashlib,json,math,time
+          from pathlib import Path
+          import requests
+
+          base='https://api.data.amsterdam.nl/v1/crowdmonitor/passanten'
+          start='2023-10-27T00:00:00'
+          fields='id,sensor,periode,naamLocatie,datumUur,aantalPassanten,gebied'
+          page_size=50000
+          out=Path('out'); outfile=out/'crowdmonitor_hourly_20231027_onward.csv.gz'
+          s=requests.Session();s.headers.update({'User-Agent':'Amsterdam-configurational-crystallization-research/1.0','Accept':'text/csv'})
+          csv.field_size_limit(100_000_000)
+          common={'periode':'uur','datumUur[gte]':start,'_fields':fields}
+          result={'id':'crowdmonitor_hourly_extension','base':base,'filters':common,'requested_page_size':page_size,'pages':[]}
+          try:
+              cp={**common,'_pageSize':1,'_count':'true'}
+              r=s.get(base,params=cp,timeout=180);r.raise_for_status()
+              total=int(r.headers['X-Total-Count'])
+              result['authoritative_total_count']=total
+              result['count_request_url']=r.url
+              result['count_headers']={k:v for k,v in r.headers.items() if k.lower().startswith('x-')}
+              pp={**common,'_format':'csv','_pageSize':page_size,'_count':'true','page':1}
+              first=out/'page_1.csv'
+              with s.get(base,params=pp,stream=True,timeout=(30,1800)) as rr:
+                  rr.raise_for_status()
+                  actual=int(rr.headers.get('X-Pagination-Limit',page_size))
+                  pages=int(rr.headers.get('X-Pagination-Count') or math.ceil(total/actual))
+                  result['actual_page_size']=actual;result['total_pages']=pages;result['first_page_url']=rr.url
+                  if pages>100:raise RuntimeError(f'{pages} pages exceeds API maximum')
+                  with first.open('wb') as f:
+                      for chunk in rr.iter_content(1048576):
+                          if chunk:f.write(chunk)
+              header=None;assembled=0;min_dt=None;max_dt=None;period_values=set()
+              with gzip.open(outfile,'wb',compresslevel=6) as gz:
+                  for page in range(1,pages+1):
+                      tmp=first if page==1 else out/f'page_{page}.csv'
+                      headers={}
+                      if page>1:
+                          q={**common,'_format':'csv','_pageSize':actual,'_count':'true','page':page}
+                          err=None
+                          for attempt in range(1,4):
+                              try:
+                                  with s.get(base,params=q,stream=True,timeout=(30,1800)) as pr:
+                                      pr.raise_for_status();headers={k:v for k,v in pr.headers.items() if k.lower().startswith('x-')}
+                                      with tmp.open('wb') as f:
+                                          for chunk in pr.iter_content(1048576):
+                                              if chunk:f.write(chunk)
+                                  err=None;break
+                              except Exception as e:err=repr(e);time.sleep(attempt*5)
+                          if err:raise RuntimeError(f'page {page}: {err}')
+                      rows=bad=0
+                      with tmp.open('r',encoding='utf-8',newline='') as f:
+                          rd=csv.reader(f);h=next(rd)
+                          if header is None:
+                              header=h
+                              idx_dt=header.index('datumUur');idx_period=header.index('periode')
+                          elif h!=header:raise RuntimeError(f'header mismatch page {page}')
+                          for row in rd:
+                              rows+=1
+                              if len(row)!=len(header):bad+=1;continue
+                              dt=row[idx_dt];period_values.add(row[idx_period])
+                              if dt:
+                                  min_dt=dt if min_dt is None or dt<min_dt else min_dt
+                                  max_dt=dt if max_dt is None or dt>max_dt else max_dt
+                      if bad:raise RuntimeError(f'bad rows page {page}: {bad}')
+                      b=tmp.read_bytes()
+                      if not b.endswith((b'\n',b'\r')):raise RuntimeError(f'page {page} truncated')
+                      cut=b.find(b'\n');gz.write(b if page==1 else b[cut+1:]);assembled+=rows
+                      result['pages'].append({'page':page,'rows':rows,'bytes':len(b),'headers':headers});tmp.unlink(missing_ok=True)
+              result.update({'assembled_rows':assembled,'columns':len(header or []),'header':header,'date_min':min_dt,'date_max':max_dt,'period_values':sorted(period_values)})
+              if assembled!=total:raise RuntimeError(f'{assembled} rows != {total}')
+              if period_values!={'uur'}:raise RuntimeError(f'unexpected period values {period_values}')
+              h=hashlib.sha256()
+              with outfile.open('rb') as f:
+                  for chunk in iter(lambda:f.read(1048576),b''):h.update(chunk)
+              result.update({'status':'downloaded_complete_count_validated','compressed_bytes':outfile.stat().st_size,'sha256':h.hexdigest()})
+          except Exception as e:
+              result.update({'status':'error_or_incomplete','error':repr(e)})
+          (out/'manifest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({k:result.get(k) for k in ['status','authoritative_total_count','assembled_rows','date_min','date_max','period_values','compressed_bytes','error']},ensure_ascii=False,indent=2))
+          if result['status']!='downloaded_complete_count_validated':raise SystemExit(2)
+          PY
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amsterdam-crowdmonitor-hourly-extension-20260721
+          path: out
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
