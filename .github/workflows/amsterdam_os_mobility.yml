@@ -27,13 +27,14 @@ jobs:
           from bs4 import BeautifulSoup
 
           page_url='https://onderzoek.amsterdam.nl/dataset/mobiliteit-en-openbaar-vervoer-in-amsterdam'
+          cms_base='https://cms.onderzoek-en-statistiek.nl'
           out=Path('out'); wbdir=out/'workbooks'
           s=requests.Session(); s.headers.update({'User-Agent':'Amsterdam-configurational-crystallization-research/1.0'})
           r=s.get(page_url,timeout=120); r.raise_for_status()
           (out/'source_page.html').write_bytes(r.content)
           soup=BeautifulSoup(r.text,'html.parser')
           title_by_filename={}
-          candidates=[]
+          paths=[]
           for tr in soup.find_all('tr'):
               title=' '.join(tr.find('td').get_text(' ',strip=True).split()) if tr.find('td') else ''
               btn=tr.find(attrs={'data-log-event-file-name':True})
@@ -41,27 +42,28 @@ jobs:
                   fn=btn.get('data-log-event-file-name','').strip()
                   if fn.lower().endswith('.xlsx'):
                       title_by_filename[fn]=title
-                      candidates.append({'href':urljoin(page_url,'/uploads/'+fn),'text':title,'discovery':'button_data_attribute'})
+                      paths.append({'path':'/uploads/'+fn,'title':title,'discovery':'button_data_attribute'})
           for m in re.finditer(r'(?P<path>/uploads/[^"\\<>\s]+?\.xlsx)',r.text,re.I):
               path=m.group('path').replace('\\/','/')
               fn=Path(path).name
-              candidates.append({'href':urljoin(page_url,path),'text':title_by_filename.get(fn,''),'discovery':'embedded_json_url'})
+              paths.append({'path':path,'title':title_by_filename.get(fn,''),'discovery':'embedded_json_url'})
           for m in re.finditer(r'data-log-event-file-name="([^"]+\.xlsx)"',r.text,re.I):
               fn=m.group(1)
-              candidates.append({'href':urljoin(page_url,'/uploads/'+fn),'text':title_by_filename.get(fn,''),'discovery':'button_regex'})
+              paths.append({'path':'/uploads/'+fn,'title':title_by_filename.get(fn,''),'discovery':'button_regex'})
           dedup=[];seen=set()
-          for c in candidates:
-              u=c['href'].replace('&amp;','&')
-              if u in seen: continue
-              seen.add(u); dedup.append({'href':u,'text':c['text'],'discovery':c['discovery']})
-          manifest={'source_page':page_url,'page_status':r.status_code,'page_sha256':hashlib.sha256(r.content).hexdigest(),'discovered_candidates':dedup,'files':[]}
+          for c in paths:
+              path=c['path']
+              if path in seen: continue
+              seen.add(path)
+              dedup.append({**c,'frontend_url':urljoin(page_url,path),'binary_url':urljoin(cms_base,path)})
+          manifest={'source_page':page_url,'binary_host':cms_base,'page_status':r.status_code,'page_sha256':hashlib.sha256(r.content).hexdigest(),'discovered_candidates':dedup,'files':[]}
           for i,c in enumerate(dedup,1):
-              u=c['href']
+              u=c['binary_url']
               try:
                   rr=s.get(u,timeout=180,allow_redirects=True); rr.raise_for_status()
                   content=rr.content; ctype=rr.headers.get('content-type','')
                   is_xlsx=content.startswith(b'PK\x03\x04') and len(content)>5000
-                  rec={'candidate_url':u,'resolved_url':rr.url,'title':c['text'],'discovery':c['discovery'],'status_code':rr.status_code,'content_type':ctype,'bytes':len(content),'sha256':hashlib.sha256(content).hexdigest(),'is_xlsx_container':is_xlsx,'last_modified':rr.headers.get('last-modified'),'etag':rr.headers.get('etag')}
+                  rec={'frontend_url':c['frontend_url'],'binary_url':u,'resolved_url':rr.url,'title':c['title'],'discovery':c['discovery'],'status_code':rr.status_code,'content_type':ctype,'bytes':len(content),'sha256':hashlib.sha256(content).hexdigest(),'is_xlsx_container':is_xlsx,'last_modified':rr.headers.get('last-modified'),'etag':rr.headers.get('etag')}
                   if is_xlsx:
                       name=Path(urlparse(rr.url).path).name or f'mobility_{i:02d}.xlsx'
                       if not name.lower().endswith('.xlsx'): name=f'mobility_{i:02d}.xlsx'
@@ -70,7 +72,7 @@ jobs:
                       (wbdir/name).write_bytes(content); rec['saved_as']=name
                   manifest['files'].append(rec)
               except Exception as e:
-                  manifest['files'].append({'candidate_url':u,'title':c['text'],'discovery':c['discovery'],'error':repr(e)})
+                  manifest['files'].append({'frontend_url':c['frontend_url'],'binary_url':u,'title':c['title'],'discovery':c['discovery'],'error':repr(e)})
           xlsx=[x for x in manifest['files'] if x.get('is_xlsx_container')]
           manifest['xlsx_count']=len(xlsx)
           (out/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
