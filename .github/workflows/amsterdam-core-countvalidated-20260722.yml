@@ -1,0 +1,97 @@
+name: Amsterdam Core Count-Validated Acquisition 20260722
+on:
+  pull_request:
+    branches: [master]
+permissions:
+  contents: read
+jobs:
+  acquire:
+    if: github.head_ref == 'assistant/amsterdam-core-countvalidated-20260722'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: bbga_kerncijfers
+            url: https://api.data.amsterdam.nl/v1/bbga/kerncijfers
+            key: id
+          - id: loopfietsnetwerk_edges
+            url: https://api.data.amsterdam.nl/v1/loopfietsnetwerk/edges
+            key: id
+          - id: loopfietsnetwerk_nodes_poi
+            url: https://api.data.amsterdam.nl/v1/loopfietsnetwerk/nodes_poi
+            key: nodeId
+          - id: loopfietsnetwerk_poi_adressen
+            url: https://api.data.amsterdam.nl/v1/loopfietsnetwerk/poi_adressen
+            key: poiId
+    steps:
+      - uses: actions/checkout@v4
+      - name: Acquire and validate ${{ matrix.id }}
+        env:
+          DATASET_ID: ${{ matrix.id }}
+          BASE_URL: ${{ matrix.url }}
+          KEY_FIELD: ${{ matrix.key }}
+        run: |
+          python - <<'PY'
+          import csv,gzip,hashlib,json,math,os,time,requests
+          from pathlib import Path
+          sid=os.environ['DATASET_ID']; base=os.environ['BASE_URL']; key=os.environ['KEY_FIELD']
+          out=Path('out');out.mkdir(exist_ok=True)
+          session=requests.Session();session.headers['User-Agent']='AmsterdamUrbanTransitionDataLake/8.0 research'
+          def get(params,attempts=6):
+              last=None
+              for i in range(attempts):
+                  try:
+                      r=session.get(base,params=params,timeout=(30,600))
+                      r.raise_for_status();return r
+                  except Exception as e:
+                      last=e;time.sleep(min(30,2**i))
+              raise last
+          probe=get({'_format':'csv','_pageSize':1,'page':2})
+          total=int(probe.headers.get('X-Total-Count') or probe.headers.get('x-total-count') or 0)
+          if total<=0: raise RuntimeError(f'No X-Total-Count: {dict(probe.headers)}')
+          page_size=50000; pages=math.ceil(total/page_size)
+          target=out/f'{sid}.csv.gz'; header=None; rows=0; ids=set(); page_log=[]
+          with gzip.open(target,'wt',encoding='utf-8',newline='',compresslevel=6) as fo:
+              writer=None
+              for page in range(1,pages+1):
+                  r=get({'_format':'csv','_pageSize':page_size,'page':page})
+                  text=r.content.decode('utf-8-sig')
+                  reader=csv.DictReader(text.splitlines())
+                  if header is None:
+                      header=reader.fieldnames
+                      if not header or key not in header: raise RuntimeError(f'bad header {header}')
+                      writer=csv.DictWriter(fo,fieldnames=header,lineterminator='\n');writer.writeheader()
+                  elif reader.fieldnames!=header: raise RuntimeError(f'schema drift page {page}')
+                  n=0
+                  for rec in reader:
+                      if None in rec: raise RuntimeError(f'malformed row page {page}')
+                      writer.writerow(rec);rows+=1;n+=1
+                      if rec.get(key): ids.add(rec[key])
+                  page_log.append({'page':page,'rows':n,'bytes':len(r.content),'total_header':r.headers.get('X-Total-Count')})
+                  print(sid,page,n,rows,total,flush=True)
+          if rows!=total: raise RuntimeError(f'count mismatch {rows} != {total}')
+          # Full parse and exact SHA after assembly.
+          parsed=0
+          with gzip.open(target,'rt',encoding='utf-8',newline='') as f:
+              rr=csv.DictReader(f)
+              if rr.fieldnames!=header: raise RuntimeError('assembled header mismatch')
+              for rec in rr:
+                  if None in rec: raise RuntimeError('assembled malformed row')
+                  parsed+=1
+          if parsed!=total: raise RuntimeError(f'parsed mismatch {parsed} != {total}')
+          h=hashlib.sha256(target.read_bytes()).hexdigest()
+          numeric=[]
+          for x in ids:
+              try:numeric.append(int(x))
+              except:pass
+          manifest={'id':sid,'base':base,'key_field':key,'authoritative_total_count':total,'assembled_rows':rows,'parsed_rows':parsed,'unique_nonnull_keys':len(ids),'page_size':page_size,'pages':page_log,'header':header,'compressed_bytes':target.stat().st_size,'sha256':h,'status':'downloaded_complete_count_validated','numeric_key_min':min(numeric) if numeric else None,'numeric_key_max':max(numeric) if numeric else None}
+          (out/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
+          print(json.dumps(manifest,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: amsterdam-core-${{ matrix.id }}-20260722
+          path: out/
+          retention-days: 7
+          compression-level: 0
