@@ -1,52 +1,98 @@
-name: Amsterdam Bulk Registry Discovery 20260722
+name: Amsterdam Exhaustive Domain Acquisition 20260722
 on:
   pull_request:
     branches: [master]
 permissions:
   contents: read
 jobs:
-  discover:
+  acquire:
     if: github.head_ref == 'assistant/amsterdam-core-countvalidated-20260722'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        id:
-          - bbga_v1_kerncijfers_openbaar.csv.zip
-          - loopfietsnetwerk_v1_edges_openbaar.csv.zip
-          - loopfietsnetwerk_v1_nodes_poi_openbaar.csv.zip
-          - loopfietsnetwerk_v1_poi_adressen_openbaar.csv.zip
-          - loopfietsnetwerk_v1_compleet_openbaar.csv.zip
+        dataset: [loop_edges, bbga_kerncijfers]
     steps:
       - uses: actions/checkout@v4
       - run: python -m pip install --quiet requests
-      - name: Resolve bulk registry record
+      - name: Exhaustively acquire ${{ matrix.dataset }}
         env:
-          BULK_ID: ${{ matrix.id }}
+          DATASET: ${{ matrix.dataset }}
         run: |
           python - <<'PY'
-          import json,os,requests,urllib.parse
+          import csv,gzip,hashlib,io,json,os,time,requests
           from pathlib import Path
-          bid=os.environ['BULK_ID'];out=Path('out');out.mkdir(exist_ok=True)
-          base='https://api.data.amsterdam.nl/v1/bulk_data/csv'
-          s=requests.Session();s.headers.update({'User-Agent':'AmsterdamUrbanTransitionDataLake/8.0 research','Accept':'application/hal+json'})
-          attempts=[]
-          urls=[base+'/'+urllib.parse.quote(bid,safe=''),base]
-          params=[None,{'id':bid},{'id[like]':'*'+bid.split('_v1_')[0]+'*'}]
-          for url in urls:
-              for par in params:
+          sid=os.environ['DATASET'];out=Path('out');out.mkdir(exist_ok=True)
+          s=requests.Session();s.headers['User-Agent']='AmsterdamUrbanTransitionDataLake/8.0 research'
+          if sid=='loop_edges':
+              base='https://api.data.amsterdam.nl/v1/loopfietsnetwerk/edges'; key='id'
+              chunks=[(a,min(a+25000,793747)) for a in range(0,793747,25000)]
+              params=lambda a,b:{'_format':'csv','id[gte]':a,'id[lt]':b}
+              probes=[{'_format':'csv','id[lt]':0},{'_format':'csv','id[gt]':793746}]
+              domain='integer id exhaustively covered by [0,793747), with empty lower/upper probes'
+          else:
+              base='https://api.data.amsterdam.nl/v1/bbga/kerncijfers'; key='id'
+              chunks=[(a,a+10) for a in range(1900,2200,10)]
+              params=lambda a,b:{'_format':'csv','jaar[gte]':a,'jaar[lt]':b}
+              probes=[{'_format':'csv','jaar[lt]':1900},{'_format':'csv','jaar[gte]':2200},{'_format':'csv','jaar[isnull]':'true'}]
+              domain='integer year exhaustively covered by [1900,2200), with empty outside/null probes'
+          def get(par):
+              last=None
+              for i in range(7):
                   try:
-                      r=s.get(url,params=par,timeout=120)
-                      entry={'url':r.url,'status':r.status_code,'headers':dict(r.headers),'text':r.text[:200000]}
-                      try:entry['json']=r.json()
-                      except:pass
-                      attempts.append(entry)
-                  except Exception as e:attempts.append({'url':url,'params':par,'error':repr(e)})
-          (out/'discovery.json').write_text(json.dumps({'bulk_id':bid,'attempts':attempts},ensure_ascii=False,indent=2),encoding='utf-8')
-          print(json.dumps({'bulk_id':bid,'statuses':[x.get('status') for x in attempts],'urls':[x.get('url') for x in attempts]},indent=2))
+                      r=s.get(base,params=par,timeout=(30,1200));r.raise_for_status();return r
+                  except Exception as e:last=e;time.sleep(min(60,2**i))
+              raise last
+          probe_log=[]
+          for par in probes:
+              r=get(par); data=r.content
+              rr=csv.DictReader(io.StringIO(data.decode('utf-8-sig'),newline=''));n=sum(1 for _ in rr)
+              probe_log.append({'url':r.url,'rows':n,'bytes':len(data),'ends_newline':data.endswith((b'\n',b'\r'))})
+              if n!=0:raise RuntimeError(f'non-empty outside-domain probe {r.url}: {n}')
+          target=out/f'{sid}.csv.gz';header=None;rows=0;keys=set();chunk_log=[]
+          with gzip.open(target,'wt',encoding='utf-8',newline='',compresslevel=6) as fo:
+              writer=None
+              for a,b in chunks:
+                  r=get(params(a,b));data=r.content
+                  if not data.endswith((b'\n',b'\r')):raise RuntimeError(f'truncated response {r.url}, bytes={len(data)}')
+                  rr=csv.DictReader(io.StringIO(data.decode('utf-8-sig'),newline=''))
+                  if header is None:
+                      header=rr.fieldnames
+                      if not header or key not in header:raise RuntimeError(f'bad header {header}')
+                      writer=csv.DictWriter(fo,fieldnames=header,lineterminator='\n');writer.writeheader()
+                  elif rr.fieldnames!=header:raise RuntimeError(f'schema drift {r.url}')
+                  n=0
+                  for rec in rr:
+                      if None in rec:raise RuntimeError(f'malformed row {r.url}')
+                      if sid=='loop_edges':
+                          x=int(rec['id'])
+                          if not (a<=x<b):raise RuntimeError(f'out-of-range id {x} for {a},{b}')
+                      else:
+                          y=int(rec['jaar'])
+                          if not (a<=y<b):raise RuntimeError(f'out-of-range year {y} for {a},{b}')
+                      if rec[key] in keys:raise RuntimeError(f'duplicate key {rec[key]}')
+                      keys.add(rec[key]);writer.writerow(rec);rows+=1;n+=1
+                  chunk_log.append({'from':a,'to':b,'url':r.url,'rows':n,'bytes':len(data)})
+                  print(sid,a,b,n,rows,flush=True)
+          parsed=0
+          with gzip.open(target,'rt',encoding='utf-8',newline='') as f:
+              rr=csv.DictReader(f)
+              for rec in rr:
+                  if None in rec:raise RuntimeError('malformed assembled row')
+                  parsed+=1
+          if parsed!=rows:raise RuntimeError(f'assembled count mismatch {parsed} {rows}')
+          h=hashlib.sha256()
+          with target.open('rb') as f:
+              for block in iter(lambda:f.read(1048576),b''):h.update(block)
+          numeric=[]
+          if sid=='loop_edges':numeric=[int(x) for x in keys]
+          manifest={'id':sid,'base':base,'domain_proof':domain,'outside_probes':probe_log,'chunks':chunk_log,'rows':rows,'parsed_rows':parsed,'unique_keys':len(keys),'header':header,'compressed_bytes':target.stat().st_size,'sha256':h.hexdigest(),'numeric_key_min':min(numeric) if numeric else None,'numeric_key_max':max(numeric) if numeric else None,'status':'downloaded_exhaustive_domain_partition_validated'}
+          (out/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
+          print(json.dumps(manifest,indent=2))
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: amsterdam-bulk-registry-${{ strategy.job-index }}-20260722
+          name: amsterdam-exhaustive-${{ matrix.dataset }}-20260722
           path: out/
           retention-days: 7
+          compression-level: 0
