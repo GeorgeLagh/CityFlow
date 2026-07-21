@@ -32,30 +32,36 @@ jobs:
           r=s.get(page_url,timeout=120); r.raise_for_status()
           (out/'source_page.html').write_bytes(r.content)
           soup=BeautifulSoup(r.text,'html.parser')
+          title_by_filename={}
           candidates=[]
-          for a in soup.find_all('a',href=True):
-              href=urljoin(page_url,a['href'])
-              text=' '.join(a.get_text(' ',strip=True).split())
-              low=href.lower()
-              if '.xlsx' in low or 'download' in low or 'media' in low or 'asset' in low:
-                  candidates.append({'href':href,'text':text})
-          # Include URLs embedded in JSON/script payloads.
-          for m in re.finditer(r'https?://[^"\'<>\s]+',r.text):
-              href=m.group(0).replace('\\u0026','&').replace('\\/','/')
-              if '.xlsx' in href.lower(): candidates.append({'href':href,'text':''})
+          for tr in soup.find_all('tr'):
+              title=' '.join(tr.find('td').get_text(' ',strip=True).split()) if tr.find('td') else ''
+              btn=tr.find(attrs={'data-log-event-file-name':True})
+              if btn:
+                  fn=btn.get('data-log-event-file-name','').strip()
+                  if fn.lower().endswith('.xlsx'):
+                      title_by_filename[fn]=title
+                      candidates.append({'href':urljoin(page_url,'/uploads/'+fn),'text':title,'discovery':'button_data_attribute'})
+          for m in re.finditer(r'(?P<path>/uploads/[^"\\<>\s]+?\.xlsx)',r.text,re.I):
+              path=m.group('path').replace('\\/','/')
+              fn=Path(path).name
+              candidates.append({'href':urljoin(page_url,path),'text':title_by_filename.get(fn,''),'discovery':'embedded_json_url'})
+          for m in re.finditer(r'data-log-event-file-name="([^"]+\.xlsx)"',r.text,re.I):
+              fn=m.group(1)
+              candidates.append({'href':urljoin(page_url,'/uploads/'+fn),'text':title_by_filename.get(fn,''),'discovery':'button_regex'})
           dedup=[];seen=set()
           for c in candidates:
               u=c['href'].replace('&amp;','&')
               if u in seen: continue
-              seen.add(u); dedup.append({'href':u,'text':c['text']})
+              seen.add(u); dedup.append({'href':u,'text':c['text'],'discovery':c['discovery']})
           manifest={'source_page':page_url,'page_status':r.status_code,'page_sha256':hashlib.sha256(r.content).hexdigest(),'discovered_candidates':dedup,'files':[]}
           for i,c in enumerate(dedup,1):
               u=c['href']
               try:
                   rr=s.get(u,timeout=180,allow_redirects=True); rr.raise_for_status()
                   content=rr.content; ctype=rr.headers.get('content-type','')
-                  is_xlsx=content.startswith(b'PK\x03\x04') and ('.xlsx' in rr.url.lower() or 'spreadsheet' in ctype.lower() or 'excel' in ctype.lower() or len(content)>5000)
-                  rec={'candidate_url':u,'resolved_url':rr.url,'link_text':c['text'],'status_code':rr.status_code,'content_type':ctype,'bytes':len(content),'sha256':hashlib.sha256(content).hexdigest(),'is_xlsx_container':is_xlsx}
+                  is_xlsx=content.startswith(b'PK\x03\x04') and len(content)>5000
+                  rec={'candidate_url':u,'resolved_url':rr.url,'title':c['text'],'discovery':c['discovery'],'status_code':rr.status_code,'content_type':ctype,'bytes':len(content),'sha256':hashlib.sha256(content).hexdigest(),'is_xlsx_container':is_xlsx,'last_modified':rr.headers.get('last-modified'),'etag':rr.headers.get('etag')}
                   if is_xlsx:
                       name=Path(urlparse(rr.url).path).name or f'mobility_{i:02d}.xlsx'
                       if not name.lower().endswith('.xlsx'): name=f'mobility_{i:02d}.xlsx'
@@ -64,12 +70,12 @@ jobs:
                       (wbdir/name).write_bytes(content); rec['saved_as']=name
                   manifest['files'].append(rec)
               except Exception as e:
-                  manifest['files'].append({'candidate_url':u,'link_text':c['text'],'error':repr(e)})
+                  manifest['files'].append({'candidate_url':u,'title':c['text'],'discovery':c['discovery'],'error':repr(e)})
           xlsx=[x for x in manifest['files'] if x.get('is_xlsx_container')]
           manifest['xlsx_count']=len(xlsx)
           (out/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
           print(json.dumps({'candidates':len(dedup),'xlsx_count':len(xlsx),'files':[x.get('saved_as') for x in xlsx]},ensure_ascii=False,indent=2))
-          if len(xlsx)<10: raise SystemExit(f'Expected at least 10 XLSX files, got {len(xlsx)}')
+          if len(xlsx)!=10: raise SystemExit(f'Expected exactly 10 XLSX files, got {len(xlsx)}')
           PY
       - name: Upload artifact
         if: always()
