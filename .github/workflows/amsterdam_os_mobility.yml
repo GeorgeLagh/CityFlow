@@ -1,0 +1,82 @@
+name: Amsterdam O&S Mobility Workbooks Acquisition
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download all official O&S mobility XLSX workbooks
+        run: |
+          python -m pip install --quiet beautifulsoup4 requests
+          mkdir -p out/workbooks
+          python - <<'PY'
+          from __future__ import annotations
+          import hashlib, json, re
+          from pathlib import Path
+          from urllib.parse import urljoin, urlparse
+          import requests
+          from bs4 import BeautifulSoup
+
+          page_url='https://onderzoek.amsterdam.nl/dataset/mobiliteit-en-openbaar-vervoer-in-amsterdam'
+          out=Path('out'); wbdir=out/'workbooks'
+          s=requests.Session(); s.headers.update({'User-Agent':'Amsterdam-configurational-crystallization-research/1.0'})
+          r=s.get(page_url,timeout=120); r.raise_for_status()
+          (out/'source_page.html').write_bytes(r.content)
+          soup=BeautifulSoup(r.text,'html.parser')
+          candidates=[]
+          for a in soup.find_all('a',href=True):
+              href=urljoin(page_url,a['href'])
+              text=' '.join(a.get_text(' ',strip=True).split())
+              low=href.lower()
+              if '.xlsx' in low or 'download' in low or 'media' in low or 'asset' in low:
+                  candidates.append({'href':href,'text':text})
+          # Include URLs embedded in JSON/script payloads.
+          for m in re.finditer(r'https?://[^"\'<>\s]+',r.text):
+              href=m.group(0).replace('\\u0026','&').replace('\\/','/')
+              if '.xlsx' in href.lower(): candidates.append({'href':href,'text':''})
+          dedup=[];seen=set()
+          for c in candidates:
+              u=c['href'].replace('&amp;','&')
+              if u in seen: continue
+              seen.add(u); dedup.append({'href':u,'text':c['text']})
+          manifest={'source_page':page_url,'page_status':r.status_code,'page_sha256':hashlib.sha256(r.content).hexdigest(),'discovered_candidates':dedup,'files':[]}
+          for i,c in enumerate(dedup,1):
+              u=c['href']
+              try:
+                  rr=s.get(u,timeout=180,allow_redirects=True); rr.raise_for_status()
+                  content=rr.content; ctype=rr.headers.get('content-type','')
+                  is_xlsx=content.startswith(b'PK\x03\x04') and ('.xlsx' in rr.url.lower() or 'spreadsheet' in ctype.lower() or 'excel' in ctype.lower() or len(content)>5000)
+                  rec={'candidate_url':u,'resolved_url':rr.url,'link_text':c['text'],'status_code':rr.status_code,'content_type':ctype,'bytes':len(content),'sha256':hashlib.sha256(content).hexdigest(),'is_xlsx_container':is_xlsx}
+                  if is_xlsx:
+                      name=Path(urlparse(rr.url).path).name or f'mobility_{i:02d}.xlsx'
+                      if not name.lower().endswith('.xlsx'): name=f'mobility_{i:02d}.xlsx'
+                      name=re.sub(r'[^A-Za-z0-9._-]+','_',name)
+                      if (wbdir/name).exists(): name=f'{i:02d}_{name}'
+                      (wbdir/name).write_bytes(content); rec['saved_as']=name
+                  manifest['files'].append(rec)
+              except Exception as e:
+                  manifest['files'].append({'candidate_url':u,'link_text':c['text'],'error':repr(e)})
+          xlsx=[x for x in manifest['files'] if x.get('is_xlsx_container')]
+          manifest['xlsx_count']=len(xlsx)
+          (out/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({'candidates':len(dedup),'xlsx_count':len(xlsx),'files':[x.get('saved_as') for x in xlsx]},ensure_ascii=False,indent=2))
+          if len(xlsx)<10: raise SystemExit(f'Expected at least 10 XLSX files, got {len(xlsx)}')
+          PY
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amsterdam-os-mobility-workbooks-20260721
+          path: out
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
