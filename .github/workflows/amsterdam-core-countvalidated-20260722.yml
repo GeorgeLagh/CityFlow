@@ -26,6 +26,7 @@ jobs:
             key: poiId
     steps:
       - uses: actions/checkout@v4
+      - run: python -m pip install --quiet requests
       - name: Acquire and validate ${{ matrix.id }}
         env:
           DATASET_ID: ${{ matrix.id }}
@@ -33,21 +34,21 @@ jobs:
           KEY_FIELD: ${{ matrix.key }}
         run: |
           python - <<'PY'
-          import csv,gzip,hashlib,json,math,os,time,requests
+          import csv,gzip,hashlib,io,json,math,os,time,requests
           from pathlib import Path
           sid=os.environ['DATASET_ID']; base=os.environ['BASE_URL']; key=os.environ['KEY_FIELD']
           out=Path('out');out.mkdir(exist_ok=True)
           session=requests.Session();session.headers['User-Agent']='AmsterdamUrbanTransitionDataLake/8.0 research'
-          def get(params,attempts=6):
+          def get(params,attempts=7):
               last=None
               for i in range(attempts):
                   try:
-                      r=session.get(base,params=params,timeout=(30,600))
+                      r=session.get(base,params=params,timeout=(30,900))
                       r.raise_for_status();return r
                   except Exception as e:
-                      last=e;time.sleep(min(30,2**i))
+                      last=e;time.sleep(min(60,2**i))
               raise last
-          probe=get({'_format':'csv','_pageSize':1,'page':2})
+          probe=get({'_format':'csv','_pageSize':50000,'page':2})
           total=int(probe.headers.get('X-Total-Count') or probe.headers.get('x-total-count') or 0)
           if total<=0: raise RuntimeError(f'No X-Total-Count: {dict(probe.headers)}')
           page_size=50000; pages=math.ceil(total/page_size)
@@ -56,13 +57,12 @@ jobs:
               writer=None
               for page in range(1,pages+1):
                   r=get({'_format':'csv','_pageSize':page_size,'page':page})
-                  text=r.content.decode('utf-8-sig')
-                  reader=csv.DictReader(text.splitlines())
+                  reader=csv.DictReader(io.StringIO(r.content.decode('utf-8-sig'),newline=''))
                   if header is None:
                       header=reader.fieldnames
                       if not header or key not in header: raise RuntimeError(f'bad header {header}')
                       writer=csv.DictWriter(fo,fieldnames=header,lineterminator='\n');writer.writeheader()
-                  elif reader.fieldnames!=header: raise RuntimeError(f'schema drift page {page}')
+                  elif reader.fieldnames!=header: raise RuntimeError(f'schema drift page {page}: {reader.fieldnames}')
                   n=0
                   for rec in reader:
                       if None in rec: raise RuntimeError(f'malformed row page {page}')
@@ -71,7 +71,6 @@ jobs:
                   page_log.append({'page':page,'rows':n,'bytes':len(r.content),'total_header':r.headers.get('X-Total-Count')})
                   print(sid,page,n,rows,total,flush=True)
           if rows!=total: raise RuntimeError(f'count mismatch {rows} != {total}')
-          # Full parse and exact SHA after assembly.
           parsed=0
           with gzip.open(target,'rt',encoding='utf-8',newline='') as f:
               rr=csv.DictReader(f)
@@ -80,12 +79,14 @@ jobs:
                   if None in rec: raise RuntimeError('assembled malformed row')
                   parsed+=1
           if parsed!=total: raise RuntimeError(f'parsed mismatch {parsed} != {total}')
-          h=hashlib.sha256(target.read_bytes()).hexdigest()
+          h=hashlib.sha256()
+          with target.open('rb') as f:
+              for b in iter(lambda:f.read(1048576),b''):h.update(b)
           numeric=[]
           for x in ids:
               try:numeric.append(int(x))
               except:pass
-          manifest={'id':sid,'base':base,'key_field':key,'authoritative_total_count':total,'assembled_rows':rows,'parsed_rows':parsed,'unique_nonnull_keys':len(ids),'page_size':page_size,'pages':page_log,'header':header,'compressed_bytes':target.stat().st_size,'sha256':h,'status':'downloaded_complete_count_validated','numeric_key_min':min(numeric) if numeric else None,'numeric_key_max':max(numeric) if numeric else None}
+          manifest={'id':sid,'base':base,'key_field':key,'authoritative_total_count':total,'assembled_rows':rows,'parsed_rows':parsed,'unique_nonnull_keys':len(ids),'page_size':page_size,'pages':page_log,'header':header,'compressed_bytes':target.stat().st_size,'sha256':h.hexdigest(),'status':'downloaded_complete_count_validated','numeric_key_min':min(numeric) if numeric else None,'numeric_key_max':max(numeric) if numeric else None}
           (out/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
           print(json.dumps(manifest,indent=2))
           PY
